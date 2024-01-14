@@ -33,18 +33,18 @@ type CreatePromotionRequest struct {
 	Name               string                    `validate:"required" json:"name"`
 	Weight             int                       `validate:"required,number" json:"weight"`
 	Price              float32                   `validate:"required,number" json:"price"`
-	ImagePath          string                    `validate:"required" json:"imagePath"`
+	ImagePath          string                    `validate:"" json:"imagePath"`
 	Duration           time.Duration             `validate:"required" json:"duration"`
-	Description        string                    `validate:"required" json:"description"`
+	Description        string                    `validate:"" json:"description"`
 	PromotionMenuItems []model.PromotionMenuItem `validate:"required,dive,required" json:"promotionMenuItems" form:"promotionMenuItems[]"`
 }
 
 type UpdatePromotionRequest struct {
 	Name               string                    `validate:"required" json:"name"`
 	Price              float32                   `validate:"required,number" json:"price"`
-	ImagePath          string                    `validate:"required" json:"imagePath"`
+	ImagePath          string                    `validate:"" json:"imagePath"`
 	Duration           time.Duration             `validate:"required" json:"duration"`
-	Description        string                    `validate:"required" json:"description"`
+	Description        string                    `validate:"" json:"description"`
 	PromotionMenuItems []model.PromotionMenuItem `validate:"required,dive,required" json:"promotionMenuItems" form:"promotionMenuItems[]"`
 }
 

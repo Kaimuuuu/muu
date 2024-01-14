@@ -27,7 +27,7 @@ type CreateEmployeeRequest struct {
 	Name      string `validate:"required" json:"name"`
 	Age       int8   `validate:"required,number" json:"age"`
 	Role      int8   `validate:"min=0" json:"role"`
-	ImagePath string `validate:"imagePath" json:"imagePath"`
+	ImagePath string `validate:"" json:"imagePath"`
 	Email     string `validate:"required,email" json:"email"`
 }
 
@@ -35,6 +35,6 @@ type UpdateEmployeeRequest struct {
 	Name      string `validate:"required" json:"name"`
 	Age       int8   `validate:"required,number" json:"age"`
 	Role      int8   `validate:"min=0" json:"role"`
-	ImagePath string `validate:"imagePath" json:"imagePath"`
+	ImagePath string `validate:"" json:"imagePath"`
 	Email     string `validate:"required,email" json:"email"`
 }

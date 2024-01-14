@@ -38,19 +38,19 @@ type CreateMenuRequest struct {
 	Name        string  `validate:"required" json:"name"`
 	Catagory    string  `validate:"required" json:"catagory"`
 	Weight      int     `validate:"required,number" json:"weight"`
-	Description string  `validate:"required" json:"description"`
+	Description string  `validate:"" json:"description"`
 	OutOfStock  bool    `validate:"boolean" json:"outOfStock"`
 	Price       float32 `validate:"required,number" json:"price"`
-	ImagePath   string  `validate:"imagePath" json:"imagePath"`
+	ImagePath   string  `validate:"" json:"imagePath"`
 }
 
 type UpdateMenuRequest struct {
 	Name        string  `validate:"required" json:"name"`
 	Catagory    string  `validate:"required" json:"catagory"`
 	Weight      int     `validate:"required,number" json:"weight"`
-	Description string  `validate:"required" json:"description"`
+	Description string  `validate:"" json:"description"`
 	Price       float32 `validate:"required,number" json:"price"`
-	ImagePath   string  `validate:"imagePath" json:"imagePath"`
+	ImagePath   string  `validate:"" json:"imagePath"`
 }
 
 type OutOfStockRequest struct {

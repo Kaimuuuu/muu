@@ -9,7 +9,7 @@ import (
 func (f *FiberServer) AddImageRoutes(employeeTokenHandler func(*fiber.Ctx) error) {
 	routes := f.app.Group("/image", employeeTokenHandler, toJwtPayloadHandler, chefRoleFilterer, waiterRoleFilterer)
 
-	routes.Post("/upload", func(c *fiber.Ctx) error {
+	routes.Post("/", func(c *fiber.Ctx) error {
 		imageFile, err := c.FormFile("image")
 		if err != nil {
 			return c.Status(fiber.ErrInternalServerError.Code).SendString(err.Error())
