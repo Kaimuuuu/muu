@@ -1,0 +1,105 @@
+package fiber
+
+import (
+	"fmt"
+	"kaimuu/model"
+	"kaimuu/service/client"
+	"kaimuu/service/employee"
+	"kaimuu/service/menu"
+	"kaimuu/service/order"
+	"kaimuu/service/promotion"
+	simplerecommandationsystem "kaimuu/service/simple-recommandation-system"
+	"strings"
+	"time"
+
+	"github.com/go-playground/validator/v10"
+	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
+)
+
+type FiberServer struct {
+	app           *fiber.App
+	config        FiberConfig
+	validator     *validator.Validate
+	clientServ    *client.ClientService
+	employeeServ  *employee.EmployeeService
+	menuServ      *menu.MenuService
+	orderServ     *order.OrderService
+	promotionServ *promotion.PromotionService
+	tokenStorage  TokenStorage
+	srs           *simplerecommandationsystem.SimpleRecommandationSystem
+}
+
+type TokenStorage interface {
+	Get(key string) (*model.Client, error)
+	Set(key string, value *model.Client) error
+	Remove(key string) error
+	GetAll() ([]model.Client, error)
+}
+
+type FiberConfig struct {
+	Port          string
+	JwtSecret     string
+	JwtExpireHour time.Duration
+}
+
+type JwtPayload struct {
+	EmployeeId string
+	Role       model.EmployeeRole
+}
+
+func New(config FiberConfig, clientServ *client.ClientService, employeeServ *employee.EmployeeService, menuServ *menu.MenuService, orderServ *order.OrderService, promotionServ *promotion.PromotionService, tokenStorage TokenStorage, srs *simplerecommandationsystem.SimpleRecommandationSystem) *FiberServer {
+	return &FiberServer{
+		app:           fiber.New(),
+		config:        config,
+		validator:     validator.New(validator.WithRequiredStructEnabled()),
+		clientServ:    clientServ,
+		employeeServ:  employeeServ,
+		menuServ:      menuServ,
+		orderServ:     orderServ,
+		promotionServ: promotionServ,
+		tokenStorage:  tokenStorage,
+		srs:           srs,
+	}
+}
+
+func (f *FiberServer) Start() {
+	f.app.Use(cors.New(cors.Config{
+		AllowHeaders:     "Origin,Content-Type,Accept,Content-Length,Accept-Language,Accept-Encoding,Connection,Access-Control-Allow-Origin,Authorization",
+		AllowOrigins:     "http://localhost:3000",
+		AllowCredentials: true,
+		AllowMethods:     "GET,POST,HEAD,PUT,DELETE,PATCH,OPTIONS",
+	}))
+
+	f.app.Static("/", "./public")
+
+	clientTokenHandler := f.NewClientTokenHandler()
+	employeeTokenHandler := f.NewEmployeeTokenHandler()
+
+	f.AddMenuRoutes(clientTokenHandler, employeeTokenHandler)
+	f.AddOrderRoutes(clientTokenHandler, employeeTokenHandler)
+	f.AddClientRoutes(clientTokenHandler, employeeTokenHandler)
+	f.AddEmployeeRoutes(employeeTokenHandler)
+	f.AddPromotionRoutes(clientTokenHandler, employeeTokenHandler)
+	f.AddAuthRoutes()
+
+	f.app.Listen(":" + f.config.Port)
+}
+
+func (f *FiberServer) Validate(req interface{}) (bool, string) {
+	errs := f.validator.Struct(req)
+	if errs != nil {
+		errMessage := make([]string, 0)
+		for _, err := range errs.(validator.ValidationErrors) {
+			errMessage = append(errMessage, fmt.Sprintf(
+				"[%s]: '%v' | Needs to implement '%s'",
+				err.Field(),
+				err.Value(),
+				err.Tag(),
+			))
+		}
+		return false, strings.Join(errMessage, " and ")
+	}
+
+	return true, ""
+}
