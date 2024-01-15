@@ -12,6 +12,7 @@ func (es *EmployeeService) UpdateEmployee(employeeId string, req UpdateEmployeeR
 	empl.Name = req.Name
 	empl.Age = req.Age
 	empl.Role = model.EmployeeRole(req.Role)
+	empl.ImagePath = req.ImagePath
 	empl.Email = req.Email
 
 	if err := es.employeeRepo.Update(employeeId, empl); err != nil {
