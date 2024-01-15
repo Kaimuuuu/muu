@@ -1,6 +1,7 @@
 package employee
 
 import (
+	"fmt"
 	"kaimuu/model"
 	"time"
 
@@ -9,6 +10,15 @@ import (
 )
 
 func (es *EmployeeService) CreateEmployee(req CreateEmployeeRequest, employeeId string) (string, error) {
+	exEmpl, err := es.employeeRepo.GetByEmail(req.Email)
+	if err != nil {
+		return "", err
+	}
+
+	if exEmpl != nil {
+		return "", fmt.Errorf("{%s} email already exist", req.Email)
+	}
+
 	genPass := uuid.NewString()
 
 	hash, err := bcrypt.GenerateFromPassword([]byte(genPass), bcrypt.MinCost)
