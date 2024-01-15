@@ -27,7 +27,7 @@ func (f *FiberServer) AddEmployeeRoutes(employeeTokenHandler func(*fiber.Ctx) er
 			return c.Status(fiber.ErrInternalServerError.Code).SendString(err.Error())
 		}
 
-		return c.SendString(genPass)
+		return c.JSON(fiber.Map{"generatedPassword": genPass})
 	})
 
 	routes.Delete("/:employeeId", func(c *fiber.Ctx) error {
