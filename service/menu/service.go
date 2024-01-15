@@ -4,11 +4,12 @@ import (
 	"kaimuu/model"
 )
 
-func NewMenuService(menuRepo MenuRepository, promotionServ PromotionService, orderServ OrderService) *MenuService {
+func NewMenuService(menuRepo MenuRepository, promotionServ PromotionService, orderServ OrderService, promotionRepo PromotionRepository) *MenuService {
 	return &MenuService{
 		menuRepo:      menuRepo,
 		promotionServ: promotionServ,
 		orderServ:     orderServ,
+		promotionRepo: promotionRepo,
 	}
 }
 
@@ -16,10 +17,12 @@ type MenuService struct {
 	menuRepo      MenuRepository
 	promotionServ PromotionService
 	orderServ     OrderService
+	promotionRepo PromotionRepository
 }
 
 type PromotionService interface {
 	GetPromotionById(promotionId string) (*model.Promotion, error)
+	GetPromotions() ([]model.Promotion, error)
 }
 
 type OrderService interface {
@@ -32,6 +35,10 @@ type MenuRepository interface {
 	GetAll() ([]model.MenuItem, error)
 	Update(id string, m *model.MenuItem) error
 	Delete(id string) error
+}
+
+type PromotionRepository interface {
+	Update(promotionId string, promo *model.Promotion) error
 }
 
 type CreateMenuRequest struct {

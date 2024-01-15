@@ -1,7 +1,6 @@
 package client
 
 import (
-	"fmt"
 	"kaimuu/model"
 	"time"
 
@@ -82,8 +81,6 @@ func (cs *ClientService) toTransactionObject(cli *model.Client) (*TransactionObj
 	collections := make(map[string]model.OrderItem)
 	for _, oi := range orderItems {
 		val, ok := collections[oi.MenuId]
-
-		fmt.Println(val, ok, oi)
 
 		if !ok {
 			collections[oi.MenuId] = oi

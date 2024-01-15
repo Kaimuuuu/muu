@@ -44,7 +44,7 @@ func main() {
 	employeeServ := employee.NewEmployeeService(employeeRepo)
 	promotoinServ := promotion.NewPromotionService(promotoinRepo, menuRepo)
 	orderServ := order.NewOrderService(orderRepo, menuRepo, promotoinServ, tokenStorage)
-	menuServ := menu.NewMenuService(menuRepo, promotoinServ, orderServ)
+	menuServ := menu.NewMenuService(menuRepo, promotoinServ, orderServ, promotoinRepo)
 	clientServ := cli.NewClientService(transactionRepo, orderServ, tokenStorage, promotoinServ)
 
 	cfg := fiber.FiberConfig{
