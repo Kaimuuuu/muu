@@ -8,6 +8,7 @@ func (ps *PromotionService) UpdatePromotion(promotionId string, req UpdatePromot
 	}
 
 	promo.Name = req.Name
+	promo.Weight = req.Weight
 	promo.Description = req.Description
 	promo.Price = req.Price
 	promo.Duration = req.Duration

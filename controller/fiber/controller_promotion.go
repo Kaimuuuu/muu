@@ -91,24 +91,4 @@ func (f *FiberServer) AddPromotionRoutes(clientTokenHandler func(*fiber.Ctx) err
 
 		return nil
 	})
-
-	routes.Put("/weight/:promotionId", waiterRoleFilterer, func(c *fiber.Ctx) error {
-		promotionId := c.Params("promotionId")
-
-		req := promotion.UpdateWeightRequest{}
-		if err := c.BodyParser(&req); err != nil {
-			return c.Status(fiber.ErrInternalServerError.Code).SendString(err.Error())
-		}
-
-		ok, errMessage := f.Validate(req)
-		if !ok {
-			return c.Status(fiber.ErrInternalServerError.Code).SendString(errMessage)
-		}
-
-		if err := f.promotionServ.UpdateWeight(promotionId, req.Weight); err != nil {
-			return c.Status(fiber.ErrInternalServerError.Code).SendString(err.Error())
-		}
-
-		return nil
-	})
 }
