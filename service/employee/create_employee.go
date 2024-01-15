@@ -10,12 +10,8 @@ import (
 )
 
 func (es *EmployeeService) CreateEmployee(req CreateEmployeeRequest, employeeId string) (string, error) {
-	exEmpl, err := es.employeeRepo.GetByEmail(req.Email)
-	if err != nil {
-		return "", err
-	}
-
-	if exEmpl != nil {
+	_, err := es.employeeRepo.GetByEmail(req.Email)
+	if err == nil {
 		return "", fmt.Errorf("{%s} email already exist", req.Email)
 	}
 
