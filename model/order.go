@@ -22,7 +22,7 @@ type Order struct {
 }
 
 type OrderItem struct {
-	MenuId     string  `bson:"menu_id" json:"menuId"`
+	MenuItemId string  `bson:"menuItemId" json:"menuItemId"`
 	Name       string  `bson:"name" json:"name"`
 	Quantity   int8    `bson:"quantity" json:"quantity"`
 	OutOfStock bool    `bson:"outOfStock" json:"outOfStock"`

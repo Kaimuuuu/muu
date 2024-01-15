@@ -33,8 +33,8 @@ func (srs *SimpleRecommandationSystem) GetRecommand(promotionId string) ([]model
 
 	menus := make([]model.MenuItem, 0)
 
-	for _, menuId := range filteredKey {
-		menu, err := srs.MenuRepo.GetById(menuId)
+	for _, menuItemId := range filteredKey {
+		menu, err := srs.MenuRepo.GetById(menuItemId)
 		if err != nil {
 			return []model.MenuItem{}, err
 		}

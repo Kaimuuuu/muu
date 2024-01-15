@@ -46,8 +46,8 @@ type CreateOrderRequest struct {
 }
 
 type RequestOrderItem struct {
-	MenuId   string `validate:"required" json:"menuId"`
-	Quantity int8   `validate:"required,number" json:"quantity"`
+	MenuItemId string `validate:"required" json:"menuItemId"`
+	Quantity   int8   `validate:"required,number" json:"quantity"`
 }
 
 type UpdateOrderStatusRequest struct {

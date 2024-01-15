@@ -27,7 +27,7 @@ func (f *FiberServer) AddOrderRoutes(clientTokenHandler func(*fiber.Ctx) error, 
 		}
 
 		for _, roi := range req.OrderItems {
-			f.srs.Increment(roi.MenuId, roi.Quantity)
+			f.srs.Increment(roi.MenuItemId, roi.Quantity)
 		}
 
 		return nil

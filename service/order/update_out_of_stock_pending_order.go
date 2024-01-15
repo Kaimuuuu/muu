@@ -10,7 +10,7 @@ func (os *OrderService) UpdateOutOfStockPendingOrder(menuItemId string, isOutOfS
 
 	for _, o := range op {
 		for i, oi := range o.OrderItems {
-			if oi.MenuId == menuItemId {
+			if oi.MenuItemId == menuItemId {
 				o.OrderItems[i].OutOfStock = isOutOfStock
 			}
 		}

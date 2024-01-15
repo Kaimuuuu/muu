@@ -19,15 +19,15 @@ func (os *OrderService) CreateOrder(req CreateOrderRequest, cli *model.Client) e
 
 	totalWeight := 0
 	for i, roi := range req.OrderItems {
-		menu, err := os.menuRepo.GetById(roi.MenuId)
+		menu, err := os.menuRepo.GetById(roi.MenuItemId)
 		if err != nil {
 			return err
 		}
 
-		// validate menuId
+		// validate menuItemId
 		errBit := 1
 		for _, promotionMenuItem := range promo.PromotionMenuItems {
-			if promotionMenuItem.MenuItemId == roi.MenuId {
+			if promotionMenuItem.MenuItemId == roi.MenuItemId {
 				errBit = 0
 				break
 			}
@@ -44,13 +44,13 @@ func (os *OrderService) CreateOrder(req CreateOrderRequest, cli *model.Client) e
 
 		price := menu.Price
 		for _, promotionMenuItem := range promo.PromotionMenuItems {
-			if promotionMenuItem.MenuItemId == roi.MenuId && promotionMenuItem.Type == model.Buffet {
+			if promotionMenuItem.MenuItemId == roi.MenuItemId && promotionMenuItem.Type == model.Buffet {
 				price = 0
 			}
 		}
 
 		oi[i] = model.OrderItem{
-			MenuId:     roi.MenuId,
+			MenuItemId: roi.MenuItemId,
 			Quantity:   roi.Quantity,
 			Name:       menu.Name,
 			OutOfStock: menu.OutOfStock,

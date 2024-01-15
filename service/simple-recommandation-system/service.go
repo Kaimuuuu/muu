@@ -10,7 +10,7 @@ type SimpleRecommandationSystem struct {
 
 type MenuRepository interface {
 	GetAll() ([]model.MenuItem, error)
-	GetById(menuId string) (*model.MenuItem, error)
+	GetById(menuItemId string) (*model.MenuItem, error)
 }
 
 type PromotionRepository interface {
