@@ -71,6 +71,9 @@ func (cs *ClientService) toTransactionObject(cli *model.Client) (*TransactionObj
 
 	orderItems := make([]model.OrderItem, 0)
 	for _, o := range ol {
+		if o.Status == model.Decline {
+			continue
+		}
 		for _, oi := range o.OrderItems {
 			if !oi.OutOfStock {
 				orderItems = append(orderItems, oi)
