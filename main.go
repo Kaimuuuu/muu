@@ -42,7 +42,7 @@ func main() {
 
 	tokenStorage := token.NewInMemoryTokenStorage()
 	employeeServ := employee.NewEmployeeService(employeeRepo)
-	promotoinServ := promotion.NewPromotionService(promotoinRepo, menuRepo)
+	promotoinServ := promotion.NewPromotionService(promotoinRepo, menuRepo, tokenStorage)
 	orderServ := order.NewOrderService(orderRepo, menuRepo, promotoinServ, tokenStorage)
 	menuServ := menu.NewMenuService(menuRepo, promotoinServ, orderServ, promotoinRepo)
 	clientServ := cli.NewClientService(transactionRepo, orderServ, tokenStorage, promotoinServ)

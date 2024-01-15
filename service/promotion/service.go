@@ -5,16 +5,18 @@ import (
 	"time"
 )
 
-func NewPromotionService(promotionRepo PromotionRepository, menuRepo MenuRepository) *PromotionService {
+func NewPromotionService(promotionRepo PromotionRepository, menuRepo MenuRepository, tokenStorage TokenStorage) *PromotionService {
 	return &PromotionService{
 		promotionRepo: promotionRepo,
 		menuRepo:      menuRepo,
+		tokenStorage:  tokenStorage,
 	}
 }
 
 type PromotionService struct {
 	promotionRepo PromotionRepository
 	menuRepo      MenuRepository
+	tokenStorage  TokenStorage
 }
 
 type PromotionRepository interface {
@@ -27,6 +29,10 @@ type PromotionRepository interface {
 
 type MenuRepository interface {
 	GetById(menuItemId string) (*model.MenuItem, error)
+}
+
+type TokenStorage interface {
+	GetAll() ([]model.Client, error)
 }
 
 type CreatePromotionRequest struct {
