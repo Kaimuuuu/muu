@@ -25,7 +25,7 @@ func (srs *SimpleRecommandationSystem) GetRecommand(promotionId string) ([]model
 	filteredKey := make([]string, 0)
 	for _, key := range keys {
 		for _, promotionMenuItem := range promo.PromotionMenuItems {
-			if key == promotionMenuItem.MenuItemId && promotionMenuItem.Type != model.None {
+			if key == promotionMenuItem.MenuItemId {
 				filteredKey = append(filteredKey, key)
 			}
 		}

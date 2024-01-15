@@ -11,10 +11,6 @@ func (ms *MenuService) GetMenu(cli *model.Client) ([]model.MenuItem, error) {
 
 	menu := make([]model.MenuItem, 0)
 	for _, promotionMenuItem := range prom.PromotionMenuItems {
-		if promotionMenuItem.Type == model.None {
-			continue
-		}
-
 		m, err := ms.GetMenuItemById(promotionMenuItem.MenuItemId)
 		if err != nil {
 			return []model.MenuItem{}, err
