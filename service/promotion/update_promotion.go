@@ -24,6 +24,7 @@ func (ps *PromotionService) UpdatePromotion(promotionId string, req UpdatePromot
 	promo.Price = req.Price
 	promo.Duration = req.Duration
 	promo.PromotionMenuItems = req.PromotionMenuItems
+	promo.ImagePath = req.ImagePath
 
 	if err := ps.promotionRepo.Update(promotionId, promo); err != nil {
 		return err
