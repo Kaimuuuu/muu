@@ -2,6 +2,14 @@ package employee
 
 import (
 	"kaimuu/model"
+
+	"github.com/cockroachdb/errors"
+)
+
+var (
+	InvalidEmailError      = errors.New("invalid email")
+	InvalidPasswordError   = errors.New("invalid password")
+	EmailHaveBeenUsedError = errors.New("email have been used")
 )
 
 func NewEmployeeService(employeeRepo EmployeeRepository) *EmployeeService {

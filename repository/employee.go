@@ -2,10 +2,10 @@ package repository
 
 import (
 	"context"
-	"fmt"
 	"kaimuu/model"
 	"time"
 
+	"github.com/pkg/errors"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
@@ -38,7 +38,7 @@ func (er *EmployeeRepository) Update(employeeId string, empl *model.Employee) er
 
 	result, err := er.col.UpdateOne(ctx, bson.D{{"id", employeeId}}, bson.D{{"$set", empl}})
 	if result.MatchedCount == 0 {
-		return fmt.Errorf("invalid employee id {%s}", employeeId)
+		return errors.Errorf("invalid employee id '%s'", employeeId)
 	}
 	if err != nil {
 		return err
@@ -53,7 +53,7 @@ func (er *EmployeeRepository) Delete(employeeId string) error {
 
 	result, err := er.col.DeleteOne(ctx, bson.D{{"id", employeeId}})
 	if result.DeletedCount == 0 {
-		return fmt.Errorf("invalid employee id {%s}", employeeId)
+		return errors.Errorf("invalid employee id '%s'", employeeId)
 	}
 	if err != nil {
 		return err

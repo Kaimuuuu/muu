@@ -3,6 +3,12 @@ package promotion
 import (
 	"kaimuu/model"
 	"time"
+
+	"github.com/cockroachdb/errors"
+)
+
+var (
+	ClientInUsedError = errors.New("there is some client used this promotion")
 )
 
 func NewPromotionService(promotionRepo PromotionRepository, menuRepo MenuRepository, tokenStorage TokenStorage) *PromotionService {

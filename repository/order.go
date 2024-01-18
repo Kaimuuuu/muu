@@ -2,10 +2,10 @@ package repository
 
 import (
 	"context"
-	"fmt"
 	"kaimuu/model"
 	"time"
 
+	"github.com/pkg/errors"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
@@ -38,7 +38,7 @@ func (or *OrderRepository) Update(orderId string, o *model.Order) error {
 
 	result, err := or.col.UpdateOne(ctx, bson.D{{"id", orderId}}, bson.D{{"$set", o}})
 	if result.MatchedCount == 0 {
-		return fmt.Errorf("invalid order id {%s}", orderId)
+		return errors.Errorf("invalid order id '%s'", orderId)
 	}
 	if err != nil {
 		return err
@@ -53,7 +53,7 @@ func (or *OrderRepository) Delete(orderId string) error {
 
 	result, err := or.col.DeleteOne(ctx, bson.D{{"id", orderId}})
 	if result.DeletedCount == 0 {
-		return fmt.Errorf("invalid order id {%s}", orderId)
+		return errors.Errorf("invalid order id '%s'", orderId)
 	}
 	if err != nil {
 		return err

@@ -14,36 +14,35 @@ func (f *FiberServer) AddEmployeeRoutes(employeeTokenHandler func(*fiber.Ctx) er
 
 		req := employee.CreateEmployeeRequest{}
 		if err := c.BodyParser(&req); err != nil {
-			return c.Status(fiber.ErrInternalServerError.Code).SendString(err.Error())
+			return f.errorHandler(c, err)
 		}
 
-		ok, errMessage := f.Validate(req)
-		if !ok {
-			return c.Status(fiber.ErrInternalServerError.Code).SendString(errMessage)
+		if err := f.Validate(req); err != nil {
+			return f.errorHandler(c, err)
 		}
 
 		genPass, err := f.employeeServ.CreateEmployee(req, payload.EmployeeId)
 		if err != nil {
-			return c.Status(fiber.ErrInternalServerError.Code).SendString(err.Error())
+			return f.errorHandler(c, err)
 		}
 
-		return c.JSON(fiber.Map{"generatedPassword": genPass})
+		return c.Status(fiber.StatusCreated).JSON(fiber.Map{"generatedPassword": genPass})
 	})
 
 	routes.Delete("/:employeeId", func(c *fiber.Ctx) error {
 		employeeId := c.Params("employeeId")
 
 		if err := f.employeeServ.Delete(employeeId); err != nil {
-			return c.Status(fiber.ErrInternalServerError.Code).SendString(err.Error())
+			return f.errorHandler(c, err)
 		}
 
-		return nil
+		return c.SendStatus(fiber.StatusOK)
 	})
 
 	routes.Get("/", func(c *fiber.Ctx) error {
 		employees, err := f.employeeServ.GetEmployees()
 		if err != nil {
-			return c.Status(fiber.ErrInternalServerError.Code).SendString(err.Error())
+			return f.errorHandler(c, err)
 		}
 
 		return c.Status(fiber.StatusOK).JSON(employees)
@@ -54,18 +53,17 @@ func (f *FiberServer) AddEmployeeRoutes(employeeTokenHandler func(*fiber.Ctx) er
 
 		req := employee.UpdateEmployeeRequest{}
 		if err := c.BodyParser(&req); err != nil {
-			return c.Status(fiber.ErrInternalServerError.Code).SendString(err.Error())
+			return f.errorHandler(c, err)
 		}
 
-		ok, errMessage := f.Validate(req)
-		if !ok {
-			return c.Status(fiber.ErrInternalServerError.Code).SendString(errMessage)
+		if err := f.Validate(req); err != nil {
+			return f.errorHandler(c, err)
 		}
 
 		if err := f.employeeServ.UpdateEmployee(employeeId, req); err != nil {
-			return c.Status(fiber.ErrInternalServerError.Code).SendString(err.Error())
+			return f.errorHandler(c, err)
 		}
 
-		return nil
+		return c.SendStatus(fiber.StatusOK)
 	})
 }

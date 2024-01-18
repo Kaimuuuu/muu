@@ -14,7 +14,7 @@ func (f *FiberServer) AddPromotionRoutes(clientTokenHandler func(*fiber.Ctx) err
 
 		weight, err := f.promotionServ.GetWeight(cli.PromotionId)
 		if err != nil {
-			c.Status(fiber.ErrInternalServerError.Code).SendString(err.Error())
+			return f.errorHandler(c, err)
 		}
 
 		return c.Status(fiber.StatusOK).JSON(fiber.Map{"weight": weight})
@@ -27,35 +27,34 @@ func (f *FiberServer) AddPromotionRoutes(clientTokenHandler func(*fiber.Ctx) err
 
 		req := promotion.CreatePromotionRequest{}
 		if err := c.BodyParser(&req); err != nil {
-			return c.Status(fiber.ErrInternalServerError.Code).SendString(err.Error())
+			return f.errorHandler(c, err)
 		}
 
-		ok, errMessage := f.Validate(req)
-		if !ok {
-			return c.Status(fiber.ErrInternalServerError.Code).SendString(errMessage)
+		if err := f.Validate(req); err != nil {
+			return f.errorHandler(c, err)
 		}
 
 		if err := f.promotionServ.CreatePromotion(req, payload.EmployeeId); err != nil {
-			return c.Status(fiber.ErrInternalServerError.Code).SendString(err.Error())
+			return f.errorHandler(c, err)
 		}
 
-		return nil
+		return c.SendStatus(fiber.StatusCreated)
 	})
 
 	routes.Delete("/:promotionId", chefRoleFilterer, waiterRoleFilterer, func(c *fiber.Ctx) error {
 		promotionId := c.Params("promotionId")
 
 		if err := f.promotionServ.Delete(promotionId); err != nil {
-			return c.Status(fiber.ErrInternalServerError.Code).SendString(err.Error())
+			return f.errorHandler(c, err)
 		}
 
-		return nil
+		return c.SendStatus(fiber.StatusOK)
 	})
 
 	routes.Get("/", func(c *fiber.Ctx) error {
 		promotions, err := f.promotionServ.GetPromotions()
 		if err != nil {
-			return c.Status(fiber.ErrInternalServerError.Code).SendString(err.Error())
+			return f.errorHandler(c, err)
 		}
 
 		return c.Status(fiber.StatusOK).JSON(promotions)
@@ -66,7 +65,7 @@ func (f *FiberServer) AddPromotionRoutes(clientTokenHandler func(*fiber.Ctx) err
 
 		promotionMenuItems, err := f.promotionServ.GetPromotionMenu(promotionId)
 		if err != nil {
-			return c.Status(fiber.ErrInternalServerError.Code).SendString(err.Error())
+			return f.errorHandler(c, err)
 		}
 
 		return c.Status(fiber.StatusOK).JSON(promotionMenuItems)
@@ -77,18 +76,17 @@ func (f *FiberServer) AddPromotionRoutes(clientTokenHandler func(*fiber.Ctx) err
 
 		req := promotion.UpdatePromotionRequest{}
 		if err := c.BodyParser(&req); err != nil {
-			return c.Status(fiber.ErrInternalServerError.Code).SendString(err.Error())
+			return f.errorHandler(c, err)
 		}
 
-		ok, errMessage := f.Validate(req)
-		if !ok {
-			return c.Status(fiber.ErrInternalServerError.Code).SendString(errMessage)
+		if err := f.Validate(req); err != nil {
+			return f.errorHandler(c, err)
 		}
 
 		if err := f.promotionServ.UpdatePromotion(promotionId, req); err != nil {
-			return c.Status(fiber.ErrInternalServerError.Code).SendString(err.Error())
+			return f.errorHandler(c, err)
 		}
 
-		return nil
+		return c.SendStatus(fiber.StatusOK)
 	})
 }

@@ -2,10 +2,10 @@ package repository
 
 import (
 	"context"
-	"fmt"
 	"kaimuu/model"
 	"time"
 
+	"github.com/pkg/errors"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
@@ -38,7 +38,7 @@ func (pr *PromotionRepository) Update(promotionId string, promo *model.Promotion
 
 	result, err := pr.col.UpdateOne(ctx, bson.D{{"id", promotionId}}, bson.D{{"$set", promo}})
 	if result.MatchedCount == 0 {
-		return fmt.Errorf("invalid promotion id {%s}", promotionId)
+		return errors.Errorf("invalid promotion id '%s'", promotionId)
 	}
 	if err != nil {
 		return err
@@ -53,7 +53,7 @@ func (pr *PromotionRepository) Delete(promotionId string) error {
 
 	result, err := pr.col.DeleteOne(ctx, bson.D{{"id", promotionId}})
 	if result.DeletedCount == 0 {
-		return fmt.Errorf("invalid promotion id {%s}", promotionId)
+		return errors.Errorf("invalid promotion id '%s'", promotionId)
 	}
 	if err != nil {
 		return err

@@ -1,7 +1,6 @@
 package client
 
 import (
-	"fmt"
 	"kaimuu/model"
 	"time"
 )
@@ -14,7 +13,7 @@ func (cs *ClientService) GenerateClient(req GenerateClientRequest, employeeId st
 
 	for _, client := range clients {
 		if client.TableNumber == req.TableNumber {
-			return "", fmt.Errorf("table number {%d} is already in used", req.TableNumber)
+			return "", TableAlreadyInUsedError
 		}
 	}
 

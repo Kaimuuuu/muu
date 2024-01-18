@@ -12,6 +12,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/cockroachdb/errors"
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
@@ -87,7 +88,7 @@ func (f *FiberServer) Start() {
 	f.app.Listen(":" + f.config.Port)
 }
 
-func (f *FiberServer) Validate(req interface{}) (bool, string) {
+func (f *FiberServer) Validate(req interface{}) error {
 	errs := f.validator.Struct(req)
 	if errs != nil {
 		errMessage := make([]string, 0)
@@ -99,8 +100,8 @@ func (f *FiberServer) Validate(req interface{}) (bool, string) {
 				err.Tag(),
 			))
 		}
-		return false, strings.Join(errMessage, " and ")
+		return errors.New(strings.Join(errMessage, " and "))
 	}
 
-	return true, ""
+	return nil
 }

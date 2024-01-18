@@ -1,7 +1,6 @@
 package order
 
 import (
-	"fmt"
 	"kaimuu/model"
 	"time"
 
@@ -33,13 +32,13 @@ func (os *OrderService) CreateOrder(req CreateOrderRequest, cli *model.Client) e
 			}
 		}
 		if errBit == 1 {
-			return fmt.Errorf("order invalid menu {%s}", menu.Name)
+			return OrderInvalidMenuItemError
 		}
 
 		totalWeight += menu.Weight * int(roi.Quantity)
 
 		if menu.OutOfStock {
-			return fmt.Errorf("menu {%s} is out of stock", menu.Name)
+			return MenuItemOutOfStockError
 		}
 
 		price := menu.Price
@@ -59,7 +58,7 @@ func (os *OrderService) CreateOrder(req CreateOrderRequest, cli *model.Client) e
 	}
 
 	if totalWeight > promo.Weight {
-		return fmt.Errorf("total weight exceeded")
+		return WeightExceededError
 	}
 
 	o := &model.Order{

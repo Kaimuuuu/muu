@@ -14,17 +14,16 @@ func (f *FiberServer) AddAuthRoutes() {
 	routes.Post("/sign-in", func(c *fiber.Ctx) error {
 		req := client.SignInRequest{}
 		if err := c.BodyParser(&req); err != nil {
-			return c.Status(fiber.ErrInternalServerError.Code).SendString(err.Error())
+			return f.errorHandler(c, err)
 		}
 
-		ok, errMessage := f.Validate(req)
-		if !ok {
-			return c.Status(fiber.ErrInternalServerError.Code).SendString(errMessage)
+		if err := f.Validate(req); err != nil {
+			return f.errorHandler(c, err)
 		}
 
 		employee, err := f.employeeServ.SignIn(req.Email, req.Password)
 		if err != nil {
-			return c.Status(fiber.ErrInternalServerError.Code).SendString(err.Error())
+			return f.errorHandler(c, err)
 		}
 
 		// Create the Claims
@@ -43,6 +42,6 @@ func (f *FiberServer) AddAuthRoutes() {
 			return c.SendStatus(fiber.StatusInternalServerError)
 		}
 
-		return c.JSON(fiber.Map{"token": t, "role": employee.Role})
+		return c.Status(fiber.StatusCreated).JSON(fiber.Map{"token": t, "role": employee.Role})
 	})
 }

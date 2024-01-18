@@ -14,23 +14,22 @@ func (f *FiberServer) AddOrderRoutes(clientTokenHandler func(*fiber.Ctx) error, 
 
 		req := order.CreateOrderRequest{}
 		if err := c.BodyParser(&req); err != nil {
-			return c.Status(fiber.ErrInternalServerError.Code).SendString(err.Error())
+			return f.errorHandler(c, err)
 		}
 
-		ok, errMessage := f.Validate(req)
-		if !ok {
-			return c.Status(fiber.ErrInternalServerError.Code).SendString(errMessage)
+		if err := f.Validate(req); err != nil {
+			return f.errorHandler(c, err)
 		}
 
 		if err := f.orderServ.CreateOrder(req, cli); err != nil {
-			return c.Status(fiber.ErrInternalServerError.Code).SendString(err.Error())
+			return f.errorHandler(c, err)
 		}
 
 		for _, roi := range req.OrderItems {
 			f.srs.Increment(roi.MenuItemId, roi.Quantity)
 		}
 
-		return nil
+		return c.SendStatus(fiber.StatusCreated)
 	})
 
 	routes := f.app.Group("/order", employeeTokenHandler, toJwtPayloadHandler)
@@ -39,16 +38,16 @@ func (f *FiberServer) AddOrderRoutes(clientTokenHandler func(*fiber.Ctx) error, 
 		orderId := c.Params("orderId")
 
 		if err := f.orderServ.Delete(orderId); err != nil {
-			return c.Status(fiber.ErrInternalServerError.Code).SendString(err.Error())
+			return f.errorHandler(c, err)
 		}
 
-		return nil
+		return c.SendStatus(fiber.StatusOK)
 	})
 
 	routes.Get("/pending", func(c *fiber.Ctx) error {
 		orders, err := f.orderServ.GetPendingOrder()
 		if err != nil {
-			return c.Status(fiber.ErrInternalServerError.Code).SendString(err.Error())
+			return f.errorHandler(c, err)
 		}
 
 		return c.Status(fiber.StatusOK).JSON(orders)
@@ -59,18 +58,17 @@ func (f *FiberServer) AddOrderRoutes(clientTokenHandler func(*fiber.Ctx) error, 
 
 		req := order.UpdateOrderStatusRequest{}
 		if err := c.BodyParser(&req); err != nil {
-			return c.Status(fiber.ErrInternalServerError.Code).SendString(err.Error())
+			return f.errorHandler(c, err)
 		}
 
-		ok, errMessage := f.Validate(req)
-		if !ok {
-			return c.Status(fiber.ErrInternalServerError.Code).SendString(errMessage)
+		if err := f.Validate(req); err != nil {
+			return f.errorHandler(c, err)
 		}
 
 		if err := f.orderServ.UpdateOrderStatus(req, orderId); err != nil {
-			return c.Status(fiber.ErrInternalServerError.Code).SendString(err.Error())
+			return f.errorHandler(c, err)
 		}
 
-		return nil
+		return c.SendStatus(fiber.StatusOK)
 	})
 }

@@ -2,6 +2,14 @@ package order
 
 import (
 	"kaimuu/model"
+
+	"github.com/cockroachdb/errors"
+)
+
+var (
+	OrderInvalidMenuItemError = errors.New("ordering invalid menu item id")
+	MenuItemOutOfStockError   = errors.New("menu item out of stock")
+	WeightExceededError       = errors.New("total weight exceeded")
 )
 
 func NewOrderService(orderRepo OrderRepository, menuRepo MenuRepository, promotionServ PromotionService, tokenStorage TokenStorage) *OrderService {

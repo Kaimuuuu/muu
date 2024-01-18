@@ -1,6 +1,14 @@
 package token
 
-import "kaimuu/model"
+import (
+	"kaimuu/model"
+
+	"github.com/cockroachdb/errors"
+)
+
+var (
+	InvalidTokenError = errors.New("invalid token")
+)
 
 type InMemoryTokenStorage struct {
 	store map[string]*model.Client

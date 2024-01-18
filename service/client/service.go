@@ -4,7 +4,12 @@ import (
 	"kaimuu/model"
 	"time"
 
+	"github.com/cockroachdb/errors"
 	"github.com/google/uuid"
+)
+
+var (
+	TableAlreadyInUsedError = errors.New("table is already in used")
 )
 
 func NewClientService(transactionRepo TransactionRepository, orderServ OrderService, tokenStorage TokenStorage, promotionServ PromotionService) *ClientService {

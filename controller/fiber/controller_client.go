@@ -16,7 +16,7 @@ func (f *FiberServer) AddClientRoutes(clientTokenHandler func(*fiber.Ctx) error,
 
 		orders, err := f.clientServ.GetOrderHistory(cli)
 		if err != nil {
-			return c.Status(fiber.ErrInternalServerError.Code).SendString(err.Error())
+			return f.errorHandler(c, err)
 		}
 
 		return c.Status(fiber.StatusOK).JSON(orders)
@@ -28,7 +28,7 @@ func (f *FiberServer) AddClientRoutes(clientTokenHandler func(*fiber.Ctx) error,
 		content := fmt.Sprintf("%s/entrypoint?token=%s", os.Getenv("FRONTEND_URL"), token)
 		qr, err := qrcode.Encode(content, 0, 256)
 		if err != nil {
-			return c.Status(fiber.ErrInternalServerError.Code).SendString(err.Error())
+			return f.errorHandler(c, err)
 		}
 
 		return c.Type("png").Send(qr)
@@ -40,10 +40,10 @@ func (f *FiberServer) AddClientRoutes(clientTokenHandler func(*fiber.Ctx) error,
 		token := c.Params("token")
 
 		if err := f.clientServ.Checkout(token); err != nil {
-			return c.Status(fiber.ErrInternalServerError.Code).SendString(err.Error())
+			return f.errorHandler(c, err)
 		}
 
-		return nil
+		return c.SendStatus(fiber.StatusCreated)
 	})
 
 	routes.Get("/checkout/:token", chefRoleFilterer, func(c *fiber.Ctx) error {
@@ -51,7 +51,7 @@ func (f *FiberServer) AddClientRoutes(clientTokenHandler func(*fiber.Ctx) error,
 
 		trans, err := f.clientServ.CheckoutSummary(token)
 		if err != nil {
-			return c.Status(fiber.ErrInternalServerError.Code).SendString(err.Error())
+			return f.errorHandler(c, err)
 		}
 
 		return c.Status(fiber.StatusOK).JSON(trans)
@@ -61,10 +61,10 @@ func (f *FiberServer) AddClientRoutes(clientTokenHandler func(*fiber.Ctx) error,
 		token := c.Params("token")
 
 		if err := f.clientServ.Delete(token); err != nil {
-			return c.Status(fiber.ErrInternalServerError.Code).SendString(err.Error())
+			return f.errorHandler(c, err)
 		}
 
-		return nil
+		return c.SendStatus(fiber.StatusOK)
 	})
 
 	routes.Post("/", chefRoleFilterer, func(c *fiber.Ctx) error {
@@ -72,26 +72,25 @@ func (f *FiberServer) AddClientRoutes(clientTokenHandler func(*fiber.Ctx) error,
 
 		req := client.GenerateClientRequest{}
 		if err := c.BodyParser(&req); err != nil {
-			return c.Status(fiber.ErrInternalServerError.Code).SendString(err.Error())
+			return f.errorHandler(c, err)
 		}
 
-		ok, errMassge := f.Validate(req)
-		if !ok {
-			return c.Status(fiber.ErrInternalServerError.Code).SendString(errMassge)
+		if err := f.Validate(req); err != nil {
+			return f.errorHandler(c, err)
 		}
 
 		token, err := f.clientServ.GenerateClient(req, payload.EmployeeId)
 		if err != nil {
-			return c.Status(fiber.ErrInternalServerError.Code).SendString(err.Error())
+			return f.errorHandler(c, err)
 		}
 
-		return c.JSON(fiber.Map{"clientToken": token})
+		return c.Status(fiber.StatusCreated).JSON(fiber.Map{"clientToken": token})
 	})
 
 	routes.Get("/", chefRoleFilterer, func(c *fiber.Ctx) error {
 		clients, err := f.clientServ.GetClients()
 		if err != nil {
-			return c.Status(fiber.ErrInternalServerError.Code).SendString(err.Error())
+			return f.errorHandler(c, err)
 		}
 
 		return c.Status(fiber.StatusOK).JSON(clients)

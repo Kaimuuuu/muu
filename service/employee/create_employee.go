@@ -1,7 +1,6 @@
 package employee
 
 import (
-	"fmt"
 	"kaimuu/model"
 	"time"
 
@@ -12,7 +11,7 @@ import (
 func (es *EmployeeService) CreateEmployee(req CreateEmployeeRequest, employeeId string) (string, error) {
 	_, err := es.employeeRepo.GetByEmail(req.Email)
 	if err == nil {
-		return "", fmt.Errorf("{%s} email already exist", req.Email)
+		return "", EmailHaveBeenUsedError
 	}
 
 	genPass := uuid.NewString()

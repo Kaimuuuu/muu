@@ -2,10 +2,10 @@ package repository
 
 import (
 	"context"
-	"fmt"
 	"kaimuu/model"
 	"time"
 
+	"github.com/pkg/errors"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
@@ -38,7 +38,7 @@ func (mr *MenuRepository) Update(menuItemId string, m *model.MenuItem) error {
 
 	result, err := mr.col.UpdateOne(ctx, bson.D{{"id", menuItemId}}, bson.D{{"$set", m}})
 	if result.MatchedCount == 0 {
-		return fmt.Errorf("invalid menu id {%s}", menuItemId)
+		return errors.Errorf("invalid menu id '%s'", menuItemId)
 	}
 	if err != nil {
 		return err
@@ -53,7 +53,7 @@ func (mr *MenuRepository) Delete(menuItemId string) error {
 
 	result, err := mr.col.DeleteOne(ctx, bson.D{{"id", menuItemId}})
 	if result.DeletedCount == 0 {
-		return fmt.Errorf("invalid menu id {%s}", menuItemId)
+		return errors.Errorf("invalid menu id '%s'", menuItemId)
 	}
 	if err != nil {
 		return err

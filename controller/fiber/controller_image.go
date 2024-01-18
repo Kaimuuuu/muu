@@ -12,12 +12,12 @@ func (f *FiberServer) AddImageRoutes(employeeTokenHandler func(*fiber.Ctx) error
 	routes.Post("/", func(c *fiber.Ctx) error {
 		imageFile, err := c.FormFile("image")
 		if err != nil {
-			return c.Status(fiber.ErrInternalServerError.Code).SendString(err.Error())
+			return f.errorHandler(c, err)
 		}
 		if err := c.SaveFile(imageFile, fmt.Sprintf("./public/%s", imageFile.Filename)); err != nil {
-			return c.Status(fiber.ErrInternalServerError.Code).SendString(err.Error())
+			return f.errorHandler(c, err)
 		}
 
-		return c.JSON(fiber.Map{"imagePath": imageFile.Filename})
+		return c.Status(fiber.StatusCreated).JSON(fiber.Map{"imagePath": imageFile.Filename})
 	})
 }

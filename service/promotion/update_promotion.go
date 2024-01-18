@@ -1,6 +1,17 @@
 package promotion
 
 func (ps *PromotionService) UpdatePromotion(promotionId string, req UpdatePromotionRequest) error {
+	clients, err := ps.tokenStorage.GetAll()
+	if err != nil {
+		return err
+	}
+
+	for _, cli := range clients {
+		if cli.PromotionId == promotionId {
+			return ClientInUsedError
+		}
+	}
+
 	promo, err := ps.promotionRepo.GetById(promotionId)
 
 	if err != nil {
