@@ -1,22 +1,18 @@
 package fiber
 
 import (
+	"kaimuu/service/client"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v5"
 )
 
-type SignInRequest struct {
-	Email    string `validate:"required" json:"email"`
-	Password string `validate:"required" json:"password"`
-}
-
 func (f *FiberServer) AddAuthRoutes() {
 	routes := f.app.Group("/auth")
 
 	routes.Post("/sign-in", func(c *fiber.Ctx) error {
-		req := SignInRequest{}
+		req := client.SignInRequest{}
 		if err := c.BodyParser(&req); err != nil {
 			return c.Status(fiber.ErrInternalServerError.Code).SendString(err.Error())
 		}

@@ -47,6 +47,11 @@ func GenerateToken() string {
 	return uuid.NewString()
 }
 
+type SignInRequest struct {
+	Email    string `validate:"required" json:"email"`
+	Password string `validate:"required" json:"password"`
+}
+
 type GenerateClientRequest struct {
 	PromotionId string `validate:"required" json:"promotionId"`
 	TableNumber int8   `validate:"required,number" json:"tableNumber"`
