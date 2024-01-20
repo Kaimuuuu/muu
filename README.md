@@ -32,3 +32,8 @@ curl -X 'POST' \
   ${backend_url}/employee
 
 ```
+
+create /public directory to store image
+```sh
+mkdir public
+```
