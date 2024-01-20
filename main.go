@@ -36,9 +36,6 @@ func main() {
 	promotoinRepo := repository.NewPromotionRepository(db)
 
 	srs := simplerecommandationsystem.New(menuRepo, promotoinRepo)
-	if err := srs.Init(); err != nil {
-		panic(err)
-	}
 
 	tokenStorage := token.NewInMemoryTokenStorage()
 	employeeServ := employee.NewEmployeeService(employeeRepo)

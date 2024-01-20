@@ -1,12 +1,15 @@
 package simplerecommandationsystem
 
 import (
-	"fmt"
 	"kaimuu/model"
 	"sort"
 )
 
 func (srs *SimpleRecommandationSystem) GetRecommand(promotionId string) ([]model.MenuItem, error) {
+	if err := srs.Sync(); err != nil {
+		return []model.MenuItem{}, err
+	}
+
 	keys := make([]string, 0)
 
 	for key := range srs.Recommands {
@@ -40,10 +43,6 @@ func (srs *SimpleRecommandationSystem) GetRecommand(promotionId string) ([]model
 		}
 
 		menus = append(menus, *menu)
-	}
-
-	for _, k := range filteredKey {
-		fmt.Println(k, srs.Recommands[k])
 	}
 
 	return menus, nil
