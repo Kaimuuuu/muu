@@ -115,7 +115,7 @@ func (cs *ClientService) toTransactionObject(cli *model.Client) (*TransactionObj
 		return &TransactionObject{}, err
 	}
 
-	sum += promo.Price
+	sum += promo.Price * float32(cli.Size)
 	for _, oi := range summaryOrderItems {
 		sum += oi.Price * float32(oi.Quantity)
 	}
