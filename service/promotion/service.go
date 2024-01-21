@@ -44,7 +44,7 @@ type TokenStorage interface {
 type CreatePromotionRequest struct {
 	Name               string                    `validate:"required" json:"name"`
 	Weight             int                       `validate:"required,number" json:"weight"`
-	Price              float32                   `validate:"required,number" json:"price"`
+	Price              float32                   `validate:"min=0,number" json:"price"`
 	ImagePath          string                    `validate:"" json:"imagePath"`
 	Duration           time.Duration             `validate:"required" json:"duration"`
 	Description        string                    `validate:"" json:"description"`
@@ -54,7 +54,7 @@ type CreatePromotionRequest struct {
 type UpdatePromotionRequest struct {
 	Name               string                    `validate:"required" json:"name"`
 	Weight             int                       `validate:"required,number" json:"weight"`
-	Price              float32                   `validate:"required,number" json:"price"`
+	Price              float32                   `validate:"min=0,number" json:"price"`
 	ImagePath          string                    `validate:"" json:"imagePath"`
 	Duration           time.Duration             `validate:"required" json:"duration"`
 	Description        string                    `validate:"" json:"description"`
