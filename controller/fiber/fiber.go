@@ -9,6 +9,7 @@ import (
 	"kaimuu/service/order"
 	"kaimuu/service/promotion"
 	simplerecommandationsystem "kaimuu/service/simple-recommandation-system"
+	"os"
 	"strings"
 	"time"
 
@@ -67,7 +68,7 @@ func New(config FiberConfig, clientServ *client.ClientService, employeeServ *emp
 func (f *FiberServer) Start() {
 	f.app.Use(cors.New(cors.Config{
 		AllowHeaders:     "Origin,Content-Type,Accept,Content-Length,Accept-Language,Accept-Encoding,Connection,Access-Control-Allow-Origin,Authorization",
-		AllowOrigins:     "http://localhost:3000",
+		AllowOrigins:     os.Getenv("FRONTEND_URL"),
 		AllowCredentials: true,
 		AllowMethods:     "GET,POST,HEAD,PUT,DELETE,PATCH,OPTIONS",
 	}))
