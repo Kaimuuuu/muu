@@ -1,5 +1,10 @@
 package promotion
 
+import (
+	"fmt"
+	"os"
+)
+
 func (ps *PromotionService) UpdatePromotion(promotionId string, req UpdatePromotionRequest) error {
 	clients, err := ps.tokenStorage.GetAll()
 	if err != nil {
@@ -13,6 +18,8 @@ func (ps *PromotionService) UpdatePromotion(promotionId string, req UpdatePromot
 	}
 
 	promo, err := ps.promotionRepo.GetById(promotionId)
+
+	os.Remove(fmt.Sprintf("public/%s", promo.ImagePath))
 
 	if err != nil {
 		return err

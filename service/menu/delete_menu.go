@@ -1,12 +1,24 @@
 package menu
 
-import "kaimuu/model"
+import (
+	"fmt"
+	"kaimuu/model"
+	"os"
+)
 
 func (ms *MenuService) Delete(menuItemId string) error {
+	m, err := ms.menuRepo.GetById(menuItemId)
+	if err != nil {
+		return err
+	}
+
+	os.Remove(fmt.Sprintf("public/%s", m.ImagePath))
+
 	if err := ms.menuRepo.Delete(menuItemId); err != nil {
 		return err
 	}
 
+	// maybe move this logic to repository layer?
 	promotions, err := ms.promotionServ.GetPromotions()
 	if err != nil {
 		return err

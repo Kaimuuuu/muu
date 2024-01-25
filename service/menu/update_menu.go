@@ -1,11 +1,18 @@
 package menu
 
+import (
+	"fmt"
+	"os"
+)
+
 func (ms *MenuService) UpdateMenu(menuItemId string, req UpdateMenuRequest) error {
 	m, err := ms.GetMenuItemById(menuItemId)
 
 	if err != nil {
 		return err
 	}
+
+	os.Remove(fmt.Sprintf("public/%s", m.ImagePath))
 
 	m.Catagory = req.Catagory
 	m.Description = req.Description
