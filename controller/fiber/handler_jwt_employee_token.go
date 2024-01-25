@@ -8,6 +8,7 @@ import (
 
 func (f *FiberServer) NewEmployeeTokenHandler() func(*fiber.Ctx) error {
 	return jwtware.New(jwtware.Config{
-		SigningKey: jwtware.SigningKey{Key: []byte(f.config.JwtSecret)},
+		SigningKey:   jwtware.SigningKey{Key: []byte(f.config.JwtSecret)},
+		ErrorHandler: f.errorHandler,
 	})
 }

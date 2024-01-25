@@ -28,5 +28,6 @@ func (f *FiberServer) NewClientTokenHandler() func(*fiber.Ctx) error {
 
 			return true, nil
 		},
+		ErrorHandler: f.errorHandler,
 	})
 }
