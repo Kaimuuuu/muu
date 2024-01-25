@@ -1,6 +1,7 @@
 package fiber
 
 import (
+	"kaimuu/model"
 	"kaimuu/service/client"
 	"time"
 
@@ -8,10 +9,10 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
-func (f *FiberServer) AddAuthRoutes() {
+func (f *FiberServer) AddAuthRoutes(clientTokenHandler func(*fiber.Ctx) error, employeeTokenHandler func(*fiber.Ctx) error) {
 	routes := f.app.Group("/auth")
 
-	routes.Post("/sign-in", func(c *fiber.Ctx) error {
+	routes.Post("/", func(c *fiber.Ctx) error {
 		req := client.SignInRequest{}
 		if err := c.BodyParser(&req); err != nil {
 			return f.errorHandler(c, err)
@@ -43,5 +44,17 @@ func (f *FiberServer) AddAuthRoutes() {
 		}
 
 		return c.Status(fiber.StatusCreated).JSON(fiber.Map{"token": t, "role": employee.Role})
+	})
+
+	routes.Get("/me/client", clientTokenHandler, func(c *fiber.Ctx) error {
+		cli := c.Locals("client").(*model.Client)
+
+		return c.Status(fiber.StatusOK).JSON(cli)
+	})
+
+	routes.Get("/me", employeeTokenHandler, toJwtPayloadHandler, func(c *fiber.Ctx) error {
+		payload := c.Locals("payload").(JwtPayload)
+
+		return c.Status(fiber.StatusOK).JSON(payload)
 	})
 }

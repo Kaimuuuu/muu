@@ -84,7 +84,7 @@ func (f *FiberServer) Start() {
 	f.AddEmployeeRoutes(employeeTokenHandler)
 	f.AddPromotionRoutes(clientTokenHandler, employeeTokenHandler)
 	f.AddImageRoutes(employeeTokenHandler)
-	f.AddAuthRoutes()
+	f.AddAuthRoutes(clientTokenHandler, employeeTokenHandler)
 
 	f.app.Listen(":" + f.config.Port)
 }
