@@ -21,8 +21,8 @@ import (
 
 type FiberServer struct {
 	app           *fiber.App
-	config        FiberConfig
 	validator     *validator.Validate
+	config        FiberConfig
 	clientServ    *client.ClientService
 	employeeServ  *employee.EmployeeService
 	menuServ      *menu.MenuService
@@ -53,8 +53,8 @@ type JwtPayload struct {
 func New(config FiberConfig, clientServ *client.ClientService, employeeServ *employee.EmployeeService, menuServ *menu.MenuService, orderServ *order.OrderService, promotionServ *promotion.PromotionService, tokenStorage TokenStorage, srs *simplerecommandationsystem.SimpleRecommandationSystem) *FiberServer {
 	return &FiberServer{
 		app:           fiber.New(),
-		config:        config,
 		validator:     validator.New(validator.WithRequiredStructEnabled()),
+		config:        config,
 		clientServ:    clientServ,
 		employeeServ:  employeeServ,
 		menuServ:      menuServ,

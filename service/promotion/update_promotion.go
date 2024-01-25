@@ -11,29 +11,28 @@ func (ps *PromotionService) UpdatePromotion(promotionId string, req UpdatePromot
 		return err
 	}
 
-	for _, cli := range clients {
-		if cli.PromotionId == promotionId {
+	for _, c := range clients {
+		if c.PromotionId == promotionId {
 			return ClientInUsedError
 		}
 	}
 
-	promo, err := ps.promotionRepo.GetById(promotionId)
-
-	os.Remove(fmt.Sprintf("public/%s", promo.ImagePath))
-
+	p, err := ps.promotionRepo.GetById(promotionId)
 	if err != nil {
 		return err
 	}
 
-	promo.Name = req.Name
-	promo.Weight = req.Weight
-	promo.Description = req.Description
-	promo.Price = req.Price
-	promo.Duration = req.Duration
-	promo.PromotionMenuItems = req.PromotionMenuItems
-	promo.ImagePath = req.ImagePath
+	os.Remove(fmt.Sprintf("public/%s", p.ImagePath))
 
-	if err := ps.promotionRepo.Update(promotionId, promo); err != nil {
+	p.Name = req.Name
+	p.Weight = req.Weight
+	p.Description = req.Description
+	p.Price = req.Price
+	p.Duration = req.Duration
+	p.PromotionMenuItems = req.PromotionMenuItems
+	p.ImagePath = req.ImagePath
+
+	if err := ps.promotionRepo.Update(promotionId, p); err != nil {
 		return err
 	}
 

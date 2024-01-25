@@ -7,14 +7,14 @@ import (
 )
 
 func (es *EmployeeService) SignIn(email, password string) (*model.Employee, error) {
-	employee, err := es.employeeRepo.GetByEmail(email)
+	e, err := es.employeeRepo.GetByEmail(email)
 	if err != nil {
 		return &model.Employee{}, InvalidEmailError
 	}
 
-	if err := bcrypt.CompareHashAndPassword([]byte(employee.Password), []byte(password)); err != nil {
+	if err := bcrypt.CompareHashAndPassword([]byte(e.Password), []byte(password)); err != nil {
 		return &model.Employee{}, InvalidPasswordError
 	}
 
-	return employee, nil
+	return e, nil
 }

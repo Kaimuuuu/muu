@@ -2,7 +2,6 @@ package order
 
 func (os *OrderService) UpdateOrderStatus(req UpdateOrderStatusRequest, orderId string) error {
 	o, err := os.orderRepo.GetById(orderId)
-
 	if err != nil {
 		return err
 	}

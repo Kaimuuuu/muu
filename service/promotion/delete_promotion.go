@@ -11,18 +11,18 @@ func (ps *PromotionService) Delete(promotionId string) error {
 		return err
 	}
 
-	for _, cli := range clients {
-		if cli.PromotionId == promotionId {
+	for _, c := range clients {
+		if c.PromotionId == promotionId {
 			return ClientInUsedError
 		}
 	}
 
-	promo, err := ps.promotionRepo.GetById(promotionId)
+	p, err := ps.promotionRepo.GetById(promotionId)
 	if err != nil {
 		return err
 	}
 
-	os.Remove(fmt.Sprintf("public/%s", promo.ImagePath))
+	os.Remove(fmt.Sprintf("public/%s", p.ImagePath))
 
 	if err := ps.promotionRepo.Delete(promotionId); err != nil {
 		return err

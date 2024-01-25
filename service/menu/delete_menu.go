@@ -24,16 +24,16 @@ func (ms *MenuService) Delete(menuItemId string) error {
 		return err
 	}
 
-	for _, promo := range promotions {
+	for _, p := range promotions {
 		filtered := make([]model.PromotionMenuItem, 0)
-		for _, promotionMenuItem := range promo.PromotionMenuItems {
-			if promotionMenuItem.MenuItemId != menuItemId {
-				filtered = append(filtered, promotionMenuItem)
+		for _, pm := range p.PromotionMenuItems {
+			if pm.MenuItemId != menuItemId {
+				filtered = append(filtered, pm)
 			}
 		}
-		promo.PromotionMenuItems = filtered
+		p.PromotionMenuItems = filtered
 
-		if err := ms.promotionRepo.Update(promo.Id, &promo); err != nil {
+		if err := ms.promotionRepo.Update(p.Id, &p); err != nil {
 			return err
 		}
 	}

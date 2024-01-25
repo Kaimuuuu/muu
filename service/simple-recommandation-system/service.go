@@ -10,11 +10,11 @@ type SimpleRecommandationSystem struct {
 
 type MenuRepository interface {
 	GetAll() ([]model.MenuItem, error)
-	GetById(menuItemId string) (*model.MenuItem, error)
+	GetById(id string) (*model.MenuItem, error)
 }
 
 type PromotionRepository interface {
-	GetById(promotionId string) (*model.Promotion, error)
+	GetById(id string) (*model.Promotion, error)
 }
 
 func New(menuRepo MenuRepository, promotionRepo PromotionRepository) *SimpleRecommandationSystem {

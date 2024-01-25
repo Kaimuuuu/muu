@@ -20,30 +20,30 @@ func (srs *SimpleRecommandationSystem) GetRecommand(promotionId string) ([]model
 		return srs.Recommands[keys[i]] > srs.Recommands[keys[j]]
 	})
 
-	promo, err := srs.PromotionRepo.GetById(promotionId)
+	p, err := srs.PromotionRepo.GetById(promotionId)
 	if err != nil {
 		return []model.MenuItem{}, err
 	}
 
 	filteredKey := make([]string, 0)
 	for _, key := range keys {
-		for _, promotionMenuItem := range promo.PromotionMenuItems {
+		for _, promotionMenuItem := range p.PromotionMenuItems {
 			if key == promotionMenuItem.MenuItemId {
 				filteredKey = append(filteredKey, key)
 			}
 		}
 	}
 
-	menus := make([]model.MenuItem, 0)
+	menuItems := make([]model.MenuItem, 0)
 
 	for _, menuItemId := range filteredKey {
-		menu, err := srs.MenuRepo.GetById(menuItemId)
+		m, err := srs.MenuRepo.GetById(menuItemId)
 		if err != nil {
 			return []model.MenuItem{}, err
 		}
 
-		menus = append(menus, *menu)
+		menuItems = append(menuItems, *m)
 	}
 
-	return menus, nil
+	return menuItems, nil
 }

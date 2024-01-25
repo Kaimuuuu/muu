@@ -8,8 +8,7 @@ import (
 )
 
 func (ps *PromotionService) CreatePromotion(req CreatePromotionRequest, employeeId string) error {
-
-	promo := &model.Promotion{
+	p := &model.Promotion{
 		Id:                 uuid.NewString(),
 		Name:               req.Name,
 		Description:        req.Description,
@@ -22,7 +21,7 @@ func (ps *PromotionService) CreatePromotion(req CreatePromotionRequest, employee
 		CreatedBy:          employeeId,
 	}
 
-	if err := ps.promotionRepo.Insert(promo); err != nil {
+	if err := ps.promotionRepo.Insert(p); err != nil {
 		return err
 	}
 

@@ -23,7 +23,7 @@ type EmployeeService struct {
 }
 
 type EmployeeRepository interface {
-	Insert(empl *model.Employee) error
+	Insert(e *model.Employee) error
 	Update(id string, empl *model.Employee) error
 	Delete(id string) error
 	GetById(id string) (*model.Employee, error)

@@ -32,13 +32,13 @@ func (mr *MenuRepository) Insert(m *model.MenuItem) error {
 	return nil
 }
 
-func (mr *MenuRepository) Update(menuItemId string, m *model.MenuItem) error {
+func (mr *MenuRepository) Update(id string, m *model.MenuItem) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	result, err := mr.col.UpdateOne(ctx, bson.D{{"id", menuItemId}}, bson.D{{"$set", m}})
+	result, err := mr.col.UpdateOne(ctx, bson.D{{"id", id}}, bson.D{{"$set", m}})
 	if result.MatchedCount == 0 {
-		return errors.Errorf("invalid menu id '%s'", menuItemId)
+		return errors.Errorf("invalid menu id '%s'", id)
 	}
 	if err != nil {
 		return err
@@ -47,13 +47,13 @@ func (mr *MenuRepository) Update(menuItemId string, m *model.MenuItem) error {
 	return nil
 }
 
-func (mr *MenuRepository) Delete(menuItemId string) error {
+func (mr *MenuRepository) Delete(id string) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	result, err := mr.col.DeleteOne(ctx, bson.D{{"id", menuItemId}})
+	result, err := mr.col.DeleteOne(ctx, bson.D{{"id", id}})
 	if result.DeletedCount == 0 {
-		return errors.Errorf("invalid menu id '%s'", menuItemId)
+		return errors.Errorf("invalid menu id '%s'", id)
 	}
 	if err != nil {
 		return err
@@ -62,12 +62,12 @@ func (mr *MenuRepository) Delete(menuItemId string) error {
 	return nil
 }
 
-func (mr *MenuRepository) GetById(menuItemId string) (*model.MenuItem, error) {
+func (mr *MenuRepository) GetById(id string) (*model.MenuItem, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
 	var m model.MenuItem
-	err := mr.col.FindOne(ctx, bson.D{{"id", menuItemId}}).Decode(&m)
+	err := mr.col.FindOne(ctx, bson.D{{"id", id}}).Decode(&m)
 	if err != nil {
 		return &model.MenuItem{}, err
 	}

@@ -11,31 +11,31 @@ func (cs *ClientService) GenerateClient(req GenerateClientRequest, employeeId st
 		return "", err
 	}
 
-	for _, client := range clients {
-		if client.TableNumber == req.TableNumber {
+	for _, c := range clients {
+		if c.TableNumber == req.TableNumber {
 			return "", TableAlreadyInUsedError
 		}
 	}
 
 	token := GenerateToken()
 
-	promo, err := cs.promotionServ.GetPromotionById(req.PromotionId)
+	p, err := cs.promotionServ.GetPromotionById(req.PromotionId)
 	if err != nil {
 		return "", err
 	}
 
-	cli := &model.Client{
+	c := &model.Client{
 		TableNumber:   req.TableNumber,
 		Size:          req.Size,
 		PromotionId:   req.PromotionId,
-		PromotionName: promo.Name,
-		Expire:        time.Now().Add(promo.Duration),
+		PromotionName: p.Name,
+		Expire:        time.Now().Add(p.Duration),
 		Token:         token,
 		CreatedAt:     time.Now(),
 		CreatedBy:     employeeId,
 	}
 
-	if err := cs.tokenStorage.Set(token, cli); err != nil {
+	if err := cs.tokenStorage.Set(token, c); err != nil {
 		return "", err
 	}
 

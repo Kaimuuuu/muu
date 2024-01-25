@@ -1,19 +1,17 @@
 package client
 
 func (cs *ClientService) Checkout(token string) error {
-	cli, err := cs.tokenStorage.Get(token)
-
+	c, err := cs.tokenStorage.Get(token)
 	if err != nil {
 		return err
 	}
 
-	trans, err := cs.toTransactionObject(cli)
-
+	t, err := cs.toTransactionObject(c)
 	if err != nil {
 		return err
 	}
 
-	if err := cs.transactionRepo.Insert(trans); err != nil {
+	if err := cs.transactionRepo.Insert(t); err != nil {
 		return err
 	}
 

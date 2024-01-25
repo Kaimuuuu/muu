@@ -20,11 +20,11 @@ func NewEmployeeRepository(db *mongo.Database) *EmployeeRepository {
 	}
 }
 
-func (er *EmployeeRepository) Insert(empl *model.Employee) error {
+func (er *EmployeeRepository) Insert(e *model.Employee) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	_, err := er.col.InsertOne(ctx, empl)
+	_, err := er.col.InsertOne(ctx, e)
 	if err != nil {
 		return err
 	}
@@ -32,13 +32,13 @@ func (er *EmployeeRepository) Insert(empl *model.Employee) error {
 	return nil
 }
 
-func (er *EmployeeRepository) Update(employeeId string, empl *model.Employee) error {
+func (er *EmployeeRepository) Update(id string, e *model.Employee) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	result, err := er.col.UpdateOne(ctx, bson.D{{"id", employeeId}}, bson.D{{"$set", empl}})
+	result, err := er.col.UpdateOne(ctx, bson.D{{"id", id}}, bson.D{{"$set", e}})
 	if result.MatchedCount == 0 {
-		return errors.Errorf("invalid employee id '%s'", employeeId)
+		return errors.Errorf("invalid employee id '%s'", id)
 	}
 	if err != nil {
 		return err
@@ -47,13 +47,13 @@ func (er *EmployeeRepository) Update(employeeId string, empl *model.Employee) er
 	return nil
 }
 
-func (er *EmployeeRepository) Delete(employeeId string) error {
+func (er *EmployeeRepository) Delete(id string) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	result, err := er.col.DeleteOne(ctx, bson.D{{"id", employeeId}})
+	result, err := er.col.DeleteOne(ctx, bson.D{{"id", id}})
 	if result.DeletedCount == 0 {
-		return errors.Errorf("invalid employee id '%s'", employeeId)
+		return errors.Errorf("invalid employee id '%s'", id)
 	}
 	if err != nil {
 		return err
@@ -62,17 +62,17 @@ func (er *EmployeeRepository) Delete(employeeId string) error {
 	return nil
 }
 
-func (er *EmployeeRepository) GetById(employeeId string) (*model.Employee, error) {
+func (er *EmployeeRepository) GetById(id string) (*model.Employee, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	var empl model.Employee
-	err := er.col.FindOne(ctx, bson.D{{"id", employeeId}}).Decode(&empl)
+	var e model.Employee
+	err := er.col.FindOne(ctx, bson.D{{"id", id}}).Decode(&e)
 	if err != nil {
 		return &model.Employee{}, err
 	}
 
-	return &empl, nil
+	return &e, nil
 }
 
 func (er *EmployeeRepository) GetAll() ([]model.Employee, error) {
@@ -96,11 +96,11 @@ func (er *EmployeeRepository) GetByEmail(email string) (*model.Employee, error) 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	var empl model.Employee
-	err := er.col.FindOne(ctx, bson.D{{"email", email}}).Decode(&empl)
+	var e model.Employee
+	err := er.col.FindOne(ctx, bson.D{{"email", email}}).Decode(&e)
 	if err != nil {
 		return &model.Employee{}, err
 	}
 
-	return &empl, nil
+	return &e, nil
 }

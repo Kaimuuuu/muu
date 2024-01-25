@@ -21,7 +21,7 @@ type MenuService struct {
 }
 
 type PromotionService interface {
-	GetPromotionById(promotionId string) (*model.Promotion, error)
+	GetPromotionById(id string) (*model.Promotion, error)
 	GetPromotions() ([]model.Promotion, error)
 }
 
@@ -38,7 +38,7 @@ type MenuRepository interface {
 }
 
 type PromotionRepository interface {
-	Update(promotionId string, promo *model.Promotion) error
+	Update(id string, p *model.Promotion) error
 }
 
 type CreateMenuRequest struct {

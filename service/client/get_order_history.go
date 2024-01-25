@@ -2,12 +2,12 @@ package client
 
 import "kaimuu/model"
 
-func (cs *ClientService) GetOrderHistory(cli *model.Client) ([]model.Order, error) {
-	ol, err := cs.orderServ.GetOrderByToken(cli.Token)
+func (cs *ClientService) GetOrderHistory(c *model.Client) ([]model.Order, error) {
+	orders, err := cs.orderServ.GetOrderByToken(c.Token)
 
 	if err != nil {
 		return []model.Order{}, err
 	}
 
-	return ol, nil
+	return orders, nil
 }

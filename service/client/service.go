@@ -29,16 +29,16 @@ type ClientService struct {
 }
 
 type TransactionRepository interface {
-	Insert(trans *TransactionObject) error
+	Insert(t *TransactionObject) error
 }
 
 type OrderService interface {
-	GetOrderById(orderId string) (*model.Order, error)
+	GetOrderById(id string) (*model.Order, error)
 	GetOrderByToken(token string) ([]model.Order, error)
 }
 
 type PromotionService interface {
-	GetPromotionById(promotionId string) (*model.Promotion, error)
+	GetPromotionById(id string) (*model.Promotion, error)
 }
 
 type TokenStorage interface {
@@ -73,14 +73,14 @@ type TransactionObject struct {
 	OrderItems        []model.OrderItem `json:"orderItems"`
 }
 
-func (cs *ClientService) toTransactionObject(cli *model.Client) (*TransactionObject, error) {
-	ol, err := cs.orderServ.GetOrderByToken(cli.Token)
+func (cs *ClientService) toTransactionObject(c *model.Client) (*TransactionObject, error) {
+	orders, err := cs.orderServ.GetOrderByToken(c.Token)
 	if err != nil {
 		return &TransactionObject{}, err
 	}
 
 	orderItems := make([]model.OrderItem, 0)
-	for _, o := range ol {
+	for _, o := range orders {
 		if o.Status == model.Decline {
 			continue
 		}
@@ -91,42 +91,42 @@ func (cs *ClientService) toTransactionObject(cli *model.Client) (*TransactionObj
 		}
 	}
 
-	collections := make(map[string]model.OrderItem)
+	col := make(map[string]model.OrderItem)
 	for _, oi := range orderItems {
-		val, ok := collections[oi.MenuItemId]
+		val, ok := col[oi.MenuItemId]
 
 		if !ok {
-			collections[oi.MenuItemId] = oi
+			col[oi.MenuItemId] = oi
 		} else {
 			val.Quantity += oi.Quantity
-			collections[oi.MenuItemId] = val
+			col[oi.MenuItemId] = val
 		}
 	}
 
-	summaryOrderItems := make([]model.OrderItem, 0)
-	for _, oi := range collections {
-		summaryOrderItems = append(summaryOrderItems, oi)
+	orderItems = make([]model.OrderItem, 0)
+	for _, oi := range col {
+		orderItems = append(orderItems, oi)
 	}
 
 	var sum float32 = 0
 
-	promo, err := cs.promotionServ.GetPromotionById(cli.PromotionId)
+	p, err := cs.promotionServ.GetPromotionById(c.PromotionId)
 	if err != nil {
 		return &TransactionObject{}, err
 	}
 
-	sum += promo.Price * float32(cli.Size)
-	for _, oi := range summaryOrderItems {
+	sum += p.Price * float32(c.Size)
+	for _, oi := range orderItems {
 		sum += oi.Price * float32(oi.Quantity)
 	}
 
 	return &TransactionObject{
-		TableNumber:       cli.TableNumber,
-		Size:              cli.Size,
-		PromotionName:     promo.Name,
+		TableNumber:       c.TableNumber,
+		Size:              c.Size,
+		PromotionName:     p.Name,
 		TotalPrice:        sum,
-		RemainingDuration: time.Until(cli.Expire),
-		CreatedAt:         cli.CreatedAt,
-		OrderItems:        summaryOrderItems,
+		RemainingDuration: time.Until(c.Expire),
+		CreatedAt:         c.CreatedAt,
+		OrderItems:        orderItems,
 	}, nil
 }

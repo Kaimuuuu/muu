@@ -33,13 +33,13 @@ func (or *OrderRepository) Insert(o *model.Order) error {
 	return nil
 }
 
-func (or *OrderRepository) Update(orderId string, o *model.Order) error {
+func (or *OrderRepository) Update(id string, o *model.Order) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	result, err := or.col.UpdateOne(ctx, bson.D{{"id", orderId}}, bson.D{{"$set", o}})
+	result, err := or.col.UpdateOne(ctx, bson.D{{"id", id}}, bson.D{{"$set", o}})
 	if result.MatchedCount == 0 {
-		return errors.Errorf("invalid order id '%s'", orderId)
+		return errors.Errorf("invalid order id '%s'", id)
 	}
 	if err != nil {
 		return err
@@ -48,13 +48,13 @@ func (or *OrderRepository) Update(orderId string, o *model.Order) error {
 	return nil
 }
 
-func (or *OrderRepository) Delete(orderId string) error {
+func (or *OrderRepository) Delete(id string) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	result, err := or.col.DeleteOne(ctx, bson.D{{"id", orderId}})
+	result, err := or.col.DeleteOne(ctx, bson.D{{"id", id}})
 	if result.DeletedCount == 0 {
-		return errors.Errorf("invalid order id '%s'", orderId)
+		return errors.Errorf("invalid order id '%s'", id)
 	}
 	if err != nil {
 		return err
@@ -63,12 +63,12 @@ func (or *OrderRepository) Delete(orderId string) error {
 	return nil
 }
 
-func (or *OrderRepository) GetById(orderId string) (*model.Order, error) {
+func (or *OrderRepository) GetById(id string) (*model.Order, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
 	var o model.Order
-	err := or.col.FindOne(ctx, bson.D{{"id", orderId}}).Decode(&o)
+	err := or.col.FindOne(ctx, bson.D{{"id", id}}).Decode(&o)
 	if err != nil {
 		return &model.Order{}, err
 	}

@@ -26,15 +26,15 @@ type PromotionService struct {
 }
 
 type PromotionRepository interface {
-	Insert(promo *model.Promotion) error
+	Insert(p *model.Promotion) error
 	GetById(id string) (*model.Promotion, error)
 	GetAll() ([]model.Promotion, error)
-	Update(id string, promo *model.Promotion) error
+	Update(id string, p *model.Promotion) error
 	Delete(id string) error
 }
 
 type MenuRepository interface {
-	GetById(menuItemId string) (*model.MenuItem, error)
+	GetById(id string) (*model.MenuItem, error)
 }
 
 type TokenStorage interface {

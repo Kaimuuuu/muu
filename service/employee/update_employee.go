@@ -7,21 +7,21 @@ import (
 )
 
 func (es *EmployeeService) UpdateEmployee(employeeId string, req UpdateEmployeeRequest) error {
-	empl, err := es.employeeRepo.GetById(employeeId)
+	e, err := es.employeeRepo.GetById(employeeId)
 
 	if err != nil {
 		return err
 	}
 
-	empl.Name = req.Name
-	empl.Age = req.Age
-	empl.Role = model.EmployeeRole(req.Role)
-	empl.ImagePath = req.ImagePath
-	empl.Email = req.Email
+	e.Name = req.Name
+	e.Age = req.Age
+	e.Role = model.EmployeeRole(req.Role)
+	e.ImagePath = req.ImagePath
+	e.Email = req.Email
 
-	os.Remove(fmt.Sprintf("public/%s", empl.ImagePath))
+	os.Remove(fmt.Sprintf("public/%s", e.ImagePath))
 
-	if err := es.employeeRepo.Update(employeeId, empl); err != nil {
+	if err := es.employeeRepo.Update(employeeId, e); err != nil {
 		return err
 	}
 

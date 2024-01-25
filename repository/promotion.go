@@ -16,15 +16,15 @@ type PromotionRepository struct {
 
 func NewPromotionRepository(db *mongo.Database) *PromotionRepository {
 	return &PromotionRepository{
-		col: db.Collection("promotions"),
+		col: db.Collection("ptions"),
 	}
 }
 
-func (pr *PromotionRepository) Insert(promo *model.Promotion) error {
+func (pr *PromotionRepository) Insert(p *model.Promotion) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	_, err := pr.col.InsertOne(ctx, promo)
+	_, err := pr.col.InsertOne(ctx, p)
 	if err != nil {
 		return err
 	}
@@ -32,13 +32,13 @@ func (pr *PromotionRepository) Insert(promo *model.Promotion) error {
 	return nil
 }
 
-func (pr *PromotionRepository) Update(promotionId string, promo *model.Promotion) error {
+func (pr *PromotionRepository) Update(id string, p *model.Promotion) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	result, err := pr.col.UpdateOne(ctx, bson.D{{"id", promotionId}}, bson.D{{"$set", promo}})
+	result, err := pr.col.UpdateOne(ctx, bson.D{{"id", id}}, bson.D{{"$set", p}})
 	if result.MatchedCount == 0 {
-		return errors.Errorf("invalid promotion id '%s'", promotionId)
+		return errors.Errorf("invalid ption id '%s'", id)
 	}
 	if err != nil {
 		return err
@@ -47,13 +47,13 @@ func (pr *PromotionRepository) Update(promotionId string, promo *model.Promotion
 	return nil
 }
 
-func (pr *PromotionRepository) Delete(promotionId string) error {
+func (pr *PromotionRepository) Delete(id string) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	result, err := pr.col.DeleteOne(ctx, bson.D{{"id", promotionId}})
+	result, err := pr.col.DeleteOne(ctx, bson.D{{"id", id}})
 	if result.DeletedCount == 0 {
-		return errors.Errorf("invalid promotion id '%s'", promotionId)
+		return errors.Errorf("invalid ption id '%s'", id)
 	}
 	if err != nil {
 		return err
@@ -62,16 +62,16 @@ func (pr *PromotionRepository) Delete(promotionId string) error {
 	return nil
 }
 
-func (pr *PromotionRepository) GetById(promotionId string) (*model.Promotion, error) {
+func (pr *PromotionRepository) GetById(id string) (*model.Promotion, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	var promo model.Promotion
-	if err := pr.col.FindOne(ctx, bson.D{{"id", promotionId}}).Decode(&promo); err != nil {
+	var p model.Promotion
+	if err := pr.col.FindOne(ctx, bson.D{{"id", id}}).Decode(&p); err != nil {
 		return &model.Promotion{}, err
 	}
 
-	return &promo, nil
+	return &p, nil
 }
 
 func (pr *PromotionRepository) GetAll() ([]model.Promotion, error) {

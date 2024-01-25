@@ -2,7 +2,6 @@ package menu
 
 func (ms *MenuService) SetOutOfStock(menuItemId string, isOutOfStock bool) error {
 	m, err := ms.menuRepo.GetById(menuItemId)
-
 	if err != nil {
 		return err
 	}

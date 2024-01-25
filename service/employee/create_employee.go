@@ -21,7 +21,7 @@ func (es *EmployeeService) CreateEmployee(req CreateEmployeeRequest, employeeId 
 		return "", err
 	}
 
-	empl := &model.Employee{
+	e := &model.Employee{
 		Id:        uuid.NewString(),
 		Name:      req.Name,
 		Password:  string(hash),
@@ -33,7 +33,7 @@ func (es *EmployeeService) CreateEmployee(req CreateEmployeeRequest, employeeId 
 		CreatedBy: employeeId,
 	}
 
-	if err := es.employeeRepo.Insert(empl); err != nil {
+	if err := es.employeeRepo.Insert(e); err != nil {
 		return "", err
 	}
 

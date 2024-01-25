@@ -7,7 +7,6 @@ import (
 
 func (ms *MenuService) UpdateMenu(menuItemId string, req UpdateMenuRequest) error {
 	m, err := ms.GetMenuItemById(menuItemId)
-
 	if err != nil {
 		return err
 	}

@@ -5,8 +5,8 @@ import "time"
 type PromotionMenuItemType int8
 
 const (
-	Buffet = iota
-	ALaCarte
+	PromotionBuffet = iota
+	PromotionALaCarte
 )
 
 type Promotion struct {

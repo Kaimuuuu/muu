@@ -2,13 +2,12 @@ package order
 
 func (os *OrderService) UpdateOutOfStockPendingOrder(menuItemId string, isOutOfStock bool) error {
 	// Time Complexity: O(o_p * c) ; o_p is size of pending order, c is size of menu
-	op, err := os.GetPendingOrder()
-
+	orders, err := os.GetPendingOrder()
 	if err != nil {
 		return err
 	}
 
-	for _, o := range op {
+	for _, o := range orders {
 		for i, oi := range o.OrderItems {
 			if oi.MenuItemId == menuItemId {
 				o.OrderItems[i].OutOfStock = isOutOfStock
