@@ -12,12 +12,12 @@ func (f *FiberServer) AddPromotionRoutes(clientTokenHandler func(*fiber.Ctx) err
 	f.app.Get("/promotion/weight", clientTokenHandler, func(c *fiber.Ctx) error {
 		cli := c.Locals("client").(*model.Client)
 
-		weight, err := f.promotionServ.GetWeight(cli.PromotionId)
+		w, err := f.promotionServ.GetWeight(cli.PromotionId)
 		if err != nil {
 			return f.errorHandler(c, err)
 		}
 
-		return c.Status(fiber.StatusOK).JSON(fiber.Map{"weight": weight})
+		return c.Status(fiber.StatusOK).JSON(fiber.Map{"weight": w})
 	})
 
 	routes := f.app.Group("/promotion", employeeTokenHandler, toJwtPayloadHandler)
@@ -43,7 +43,6 @@ func (f *FiberServer) AddPromotionRoutes(clientTokenHandler func(*fiber.Ctx) err
 
 	routes.Delete("/:promotionId", chefRoleFilterer, waiterRoleFilterer, func(c *fiber.Ctx) error {
 		promotionId := c.Params("promotionId")
-
 		if err := f.promotionServ.Delete(promotionId); err != nil {
 			return f.errorHandler(c, err)
 		}

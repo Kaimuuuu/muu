@@ -22,19 +22,17 @@ func (f *FiberServer) AddAuthRoutes(clientTokenHandler func(*fiber.Ctx) error, e
 			return f.errorHandler(c, err)
 		}
 
-		employee, err := f.employeeServ.SignIn(req.Email, req.Password)
+		e, err := f.employeeServ.SignIn(req.Email, req.Password)
 		if err != nil {
 			return f.errorHandler(c, err)
 		}
 
-		// Create the Claims
 		claims := jwt.MapClaims{
-			"employeeId": employee.Id,
-			"role":       employee.Role,
+			"employeeId": e.Id,
+			"role":       e.Role,
 			"exp":        time.Now().Add(time.Hour * f.config.JwtExpireHour).Unix(),
 		}
 
-		// Create token
 		token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
 		// Generate encoded token and send it as response.
@@ -43,7 +41,7 @@ func (f *FiberServer) AddAuthRoutes(clientTokenHandler func(*fiber.Ctx) error, e
 			return c.SendStatus(fiber.StatusInternalServerError)
 		}
 
-		return c.Status(fiber.StatusCreated).JSON(fiber.Map{"token": t, "role": employee.Role})
+		return c.Status(fiber.StatusCreated).JSON(fiber.Map{"token": t, "role": e.Role})
 	})
 
 	routes.Get("/me/client", clientTokenHandler, func(c *fiber.Ctx) error {

@@ -11,34 +11,34 @@ func (f *FiberServer) AddMenuRoutes(clientTokenHandler func(*fiber.Ctx) error, e
 	f.app.Get("/menu", clientTokenHandler, func(c *fiber.Ctx) error {
 		cli := c.Locals("client").(*model.Client)
 
-		menu, err := f.menuServ.GetMenu(cli)
+		m, err := f.menuServ.GetMenu(cli)
 		if err != nil {
 			return f.errorHandler(c, err)
 		}
 
-		return c.Status(fiber.StatusOK).JSON(menu)
+		return c.Status(fiber.StatusOK).JSON(m)
 	})
 
 	f.app.Get("/menu/recommand", clientTokenHandler, func(c *fiber.Ctx) error {
 		cli := c.Locals("client").(*model.Client)
 
-		menu, err := f.srs.GetRecommand(cli.PromotionId)
+		m, err := f.srs.GetRecommand(cli.PromotionId)
 		if err != nil {
 			return f.errorHandler(c, err)
 		}
 
-		return c.Status(fiber.StatusOK).JSON(menu)
+		return c.Status(fiber.StatusOK).JSON(m)
 	})
 
 	routes := f.app.Group("/menu", employeeTokenHandler, toJwtPayloadHandler)
 
 	routes.Get("/edit", func(c *fiber.Ctx) error {
-		menu, err := f.menuServ.GetAllMenu()
+		m, err := f.menuServ.GetAllMenu()
 		if err != nil {
 			return f.errorHandler(c, err)
 		}
 
-		return c.Status(fiber.StatusOK).JSON(menu)
+		return c.Status(fiber.StatusOK).JSON(m)
 	})
 
 	routes.Post("/", chefRoleFilterer, waiterRoleFilterer, func(c *fiber.Ctx) error {

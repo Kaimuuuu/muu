@@ -6,7 +6,7 @@ import (
 	"kaimuu/repository"
 	cli "kaimuu/service/client"
 	"kaimuu/service/employee"
-	token "kaimuu/service/in_memory_token"
+	token "kaimuu/service/in-memory-token-storage"
 	"kaimuu/service/menu"
 	"kaimuu/service/order"
 	"kaimuu/service/promotion"

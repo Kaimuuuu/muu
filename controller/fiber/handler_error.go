@@ -37,7 +37,6 @@ func (f *FiberServer) sendError(c *fiber.Ctx, errInfo ErrorInfo) error {
 }
 
 func (f *FiberServer) errorHandler(c *fiber.Ctx, err error) error {
-
 	for iErr, info := range errorList {
 		if errors.Is(err, iErr) {
 			return f.sendError(c, info)

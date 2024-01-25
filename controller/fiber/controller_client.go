@@ -49,12 +49,12 @@ func (f *FiberServer) AddClientRoutes(clientTokenHandler func(*fiber.Ctx) error,
 	routes.Get("/checkout/:token", chefRoleFilterer, func(c *fiber.Ctx) error {
 		token := c.Params("token")
 
-		trans, err := f.clientServ.CheckoutSummary(token)
+		t, err := f.clientServ.CheckoutSummary(token)
 		if err != nil {
 			return f.errorHandler(c, err)
 		}
 
-		return c.Status(fiber.StatusOK).JSON(trans)
+		return c.Status(fiber.StatusOK).JSON(t)
 	})
 
 	routes.Delete("/:token", chefRoleFilterer, waiterRoleFilterer, func(c *fiber.Ctx) error {
