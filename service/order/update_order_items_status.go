@@ -1,5 +1,7 @@
 package order
 
+import "kaimuu/model"
+
 func (os *OrderService) UpdateOrderItemStatus(req UpdateOrderItemsStatusRequest, orderId string) error {
 	o, err := os.orderRepo.GetById(orderId)
 	if err != nil {
@@ -12,6 +14,16 @@ func (os *OrderService) UpdateOrderItemStatus(req UpdateOrderItemsStatusRequest,
 				o.OrderItems[i].IsComplete = roi.Status
 			}
 		}
+	}
+
+	errBit := 0
+	for _, oi := range o.OrderItems {
+		if !oi.IsComplete {
+			errBit = 1
+		}
+	}
+	if errBit == 0 {
+		o.Status = model.OrderSuccessStatus
 	}
 
 	if err := os.orderRepo.Update(orderId, o); err != nil {
