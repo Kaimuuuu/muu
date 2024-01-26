@@ -5,12 +5,12 @@ import (
 	"time"
 )
 
-func NewTransactionService(transactionRepo TransactionRepository, orderRepo OrderRepository, promotionRepo PromotionRepository, tokenServ TokenService) *TransactionService {
+func NewTransactionService(transactionRepo TransactionRepository, orderRepo OrderRepository, promotionRepo PromotionRepository, tokenRepo TokenRepository) *TransactionService {
 	return &TransactionService{
 		transactionRepo: transactionRepo,
 		orderRepo:       orderRepo,
 		promotionRepo:   promotionRepo,
-		tokenServ:       tokenServ,
+		tokenRepo:       tokenRepo,
 	}
 }
 
@@ -18,7 +18,7 @@ type TransactionService struct {
 	transactionRepo TransactionRepository
 	orderRepo       OrderRepository
 	promotionRepo   PromotionRepository
-	tokenServ       TokenService
+	tokenRepo       TokenRepository
 }
 
 type OrderRepository interface {
@@ -30,7 +30,7 @@ type PromotionRepository interface {
 	GetById(id string) (*model.Promotion, error)
 }
 
-type TokenService interface {
+type TokenRepository interface {
 	Get(token string) (*model.Client, error)
 	Delete(token string) error
 }

@@ -1,7 +1,7 @@
 package transaction
 
 func (ts *TransactionService) Checkout(token string) error {
-	c, err := ts.tokenServ.Get(token)
+	c, err := ts.tokenRepo.Get(token)
 	if err != nil {
 		return err
 	}
@@ -15,7 +15,7 @@ func (ts *TransactionService) Checkout(token string) error {
 		return err
 	}
 
-	if err := ts.tokenServ.Delete(token); err != nil {
+	if err := ts.tokenRepo.Delete(token); err != nil {
 		return err
 	}
 

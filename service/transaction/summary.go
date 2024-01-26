@@ -3,7 +3,7 @@ package transaction
 import "kaimuu/model"
 
 func (ts *TransactionService) Summary(token string) (*model.Transaction, error) {
-	c, err := ts.tokenServ.Get(token)
+	c, err := ts.tokenRepo.Get(token)
 	if err != nil {
 		return &model.Transaction{}, err
 	}
