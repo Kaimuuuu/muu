@@ -3,12 +3,13 @@ package fiber
 import (
 	"fmt"
 	"kaimuu/model"
-	"kaimuu/service/client"
 	"kaimuu/service/employee"
 	"kaimuu/service/menu"
 	"kaimuu/service/order"
 	"kaimuu/service/promotion"
-	simplerecommandationsystem "kaimuu/service/simple-recommandation-system"
+	srs "kaimuu/service/simple-recommandation-system"
+	"kaimuu/service/token"
+	"kaimuu/service/transaction"
 	"os"
 	"strings"
 	"time"
@@ -20,16 +21,16 @@ import (
 )
 
 type FiberServer struct {
-	app           *fiber.App
-	validator     *validator.Validate
-	config        FiberConfig
-	clientServ    *client.ClientService
-	employeeServ  *employee.EmployeeService
-	menuServ      *menu.MenuService
-	orderServ     *order.OrderService
-	promotionServ *promotion.PromotionService
-	tokenStorage  TokenStorage
-	srs           *simplerecommandationsystem.SimpleRecommandationSystem
+	app             *fiber.App
+	validator       *validator.Validate
+	config          FiberConfig
+	transactionServ *transaction.TransactionService
+	tokenServ       *token.TokenService
+	employeeServ    *employee.EmployeeService
+	menuServ        *menu.MenuService
+	orderServ       *order.OrderService
+	promotionServ   *promotion.PromotionService
+	srs             *srs.SimpleRecommandationSystem
 }
 
 type TokenStorage interface {
@@ -50,18 +51,18 @@ type JwtPayload struct {
 	Role       model.EmployeeRole
 }
 
-func New(config FiberConfig, clientServ *client.ClientService, employeeServ *employee.EmployeeService, menuServ *menu.MenuService, orderServ *order.OrderService, promotionServ *promotion.PromotionService, tokenStorage TokenStorage, srs *simplerecommandationsystem.SimpleRecommandationSystem) *FiberServer {
+func New(config FiberConfig, transactionServ *transaction.TransactionService, tokenServ *token.TokenService, employeeServ *employee.EmployeeService, menuServ *menu.MenuService, orderServ *order.OrderService, promotionServ *promotion.PromotionService, srs *srs.SimpleRecommandationSystem) *FiberServer {
 	return &FiberServer{
-		app:           fiber.New(),
-		validator:     validator.New(validator.WithRequiredStructEnabled()),
-		config:        config,
-		clientServ:    clientServ,
-		employeeServ:  employeeServ,
-		menuServ:      menuServ,
-		orderServ:     orderServ,
-		promotionServ: promotionServ,
-		tokenStorage:  tokenStorage,
-		srs:           srs,
+		app:             fiber.New(),
+		validator:       validator.New(validator.WithRequiredStructEnabled()),
+		config:          config,
+		transactionServ: transactionServ,
+		tokenServ:       tokenServ,
+		employeeServ:    employeeServ,
+		menuServ:        menuServ,
+		orderServ:       orderServ,
+		promotionServ:   promotionServ,
+		srs:             srs,
 	}
 }
 
@@ -80,11 +81,12 @@ func (f *FiberServer) Start() {
 
 	f.AddMenuRoutes(clientTokenHandler, employeeTokenHandler)
 	f.AddOrderRoutes(clientTokenHandler, employeeTokenHandler)
-	f.AddClientRoutes(clientTokenHandler, employeeTokenHandler)
+	f.AddTokenRoutes(clientTokenHandler, employeeTokenHandler)
 	f.AddEmployeeRoutes(employeeTokenHandler)
 	f.AddPromotionRoutes(clientTokenHandler, employeeTokenHandler)
 	f.AddImageRoutes(employeeTokenHandler)
 	f.AddAuthRoutes(clientTokenHandler, employeeTokenHandler)
+	f.AddTransactionRoutes(clientTokenHandler, employeeTokenHandler)
 
 	f.app.Listen(":" + f.config.Port)
 }

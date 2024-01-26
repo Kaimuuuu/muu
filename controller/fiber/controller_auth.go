@@ -2,7 +2,7 @@ package fiber
 
 import (
 	"kaimuu/model"
-	"kaimuu/service/client"
+	"kaimuu/service/employee"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -13,7 +13,7 @@ func (f *FiberServer) AddAuthRoutes(clientTokenHandler func(*fiber.Ctx) error, e
 	routes := f.app.Group("/auth")
 
 	routes.Post("/", func(c *fiber.Ctx) error {
-		req := client.SignInRequest{}
+		req := employee.SignInRequest{}
 		if err := c.BodyParser(&req); err != nil {
 			return f.errorHandler(c, err)
 		}

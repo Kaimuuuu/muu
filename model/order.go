@@ -7,18 +7,18 @@ import (
 type OrderStatus int8
 
 const (
-	Pending OrderStatus = iota
-	Success
-	Decline
+	OrderPendingStatus OrderStatus = iota
+	OrderSuccessStatus
+	OrderDeclinedStatus
 )
 
 type Order struct {
 	Id          string      `bson:"id" json:"id"`
 	TableNumber int8        `bson:"tableNumber" json:"tableNumber"`
 	OrderItems  []OrderItem `bson:"orderItems" json:"orderItems"`
-	Status      OrderStatus `bson:"status" json:"status"`
 	CreatedAt   time.Time   `bson:"createdAt" json:"createdAt"`
 	OrderBy     string      `bson:"orderBy" json:"orderBy"`
+	Status      OrderStatus `bson:"status" json:"status"`
 }
 
 type OrderItem struct {
@@ -27,4 +27,5 @@ type OrderItem struct {
 	Quantity   int8    `bson:"quantity" json:"quantity"`
 	OutOfStock bool    `bson:"outOfStock" json:"outOfStock"`
 	Price      float32 `bson:"price" json:"price"`
+	IsComplete bool    `bson:"isComplete" json:"isComplete"`
 }

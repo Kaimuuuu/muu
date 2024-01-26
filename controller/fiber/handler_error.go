@@ -1,7 +1,6 @@
 package fiber
 
 import (
-	"kaimuu/service/client"
 	"kaimuu/service/employee"
 	"kaimuu/service/order"
 	"kaimuu/service/promotion"
@@ -20,7 +19,6 @@ type ErrorResponse struct {
 }
 
 var errorList = map[error]ErrorInfo{
-	client.TableAlreadyInUsedError:  {400, "โต๊ะนี้ถูกใช้งานอยู่"},
 	employee.InvalidEmailError:      {400, "email ไม่ถูกต้อง"},
 	employee.InvalidPasswordError:   {400, "รหัสผ่านไม่ถูกต้อง"},
 	employee.EmailHaveBeenUsedError: {400, "email นี้ถูกใช้งานแล้ว"},

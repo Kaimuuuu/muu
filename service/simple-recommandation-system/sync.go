@@ -1,7 +1,7 @@
 package simplerecommandationsystem
 
 func (srs *SimpleRecommandationSystem) Sync() error {
-	menuItems, err := srs.MenuRepo.GetAll()
+	menuItems, err := srs.MenuRepo.All()
 	if err != nil {
 		return err
 	}

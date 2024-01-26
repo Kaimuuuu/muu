@@ -4,13 +4,13 @@ import (
 	"context"
 	"kaimuu/controller/fiber"
 	"kaimuu/repository"
-	cli "kaimuu/service/client"
 	"kaimuu/service/employee"
-	token "kaimuu/service/in-memory-token-storage"
 	"kaimuu/service/menu"
 	"kaimuu/service/order"
 	"kaimuu/service/promotion"
-	simplerecommandationsystem "kaimuu/service/simple-recommandation-system"
+	srs "kaimuu/service/simple-recommandation-system"
+	"kaimuu/service/token"
+	"kaimuu/service/transaction"
 	"os"
 	"time"
 
@@ -33,16 +33,17 @@ func main() {
 	orderRepo := repository.NewOrderRepository(db)
 	transactionRepo := repository.NewTransactionRepository(db)
 	employeeRepo := repository.NewEmployeeRepository(db)
-	promotoinRepo := repository.NewPromotionRepository(db)
+	promotionRepo := repository.NewPromotionRepository(db)
+	tokenRepo := repository.NewTokenRepository(db)
 
-	srs := simplerecommandationsystem.New(menuRepo, promotoinRepo)
+	srs := srs.New(menuRepo, promotionRepo)
 
-	tokenStorage := token.NewInMemoryTokenStorage()
 	employeeServ := employee.NewEmployeeService(employeeRepo)
-	promotoinServ := promotion.NewPromotionService(promotoinRepo, menuRepo, tokenStorage)
-	orderServ := order.NewOrderService(orderRepo, menuRepo, promotoinServ, tokenStorage)
-	menuServ := menu.NewMenuService(menuRepo, promotoinServ, orderServ, promotoinRepo)
-	clientServ := cli.NewClientService(transactionRepo, orderServ, tokenStorage, promotoinServ)
+	promotoinServ := promotion.NewPromotionService(promotionRepo, menuRepo, tokenRepo)
+	orderServ := order.NewOrderService(orderRepo, menuRepo, promotionRepo, tokenRepo)
+	menuServ := menu.NewMenuService(menuRepo, orderServ, promotionRepo)
+	tokenServ := token.NewTokenService(tokenRepo, promotionRepo)
+	transactionServ := transaction.NewTransactionService(transactionRepo, orderRepo, promotionRepo, tokenRepo)
 
 	cfg := fiber.FiberConfig{
 		Port:          os.Getenv("PORT"),
@@ -50,6 +51,6 @@ func main() {
 		JwtExpireHour: 10,
 	}
 
-	fiber := fiber.New(cfg, clientServ, employeeServ, menuServ, orderServ, promotoinServ, tokenStorage, srs)
+	fiber := fiber.New(cfg, transactionServ, tokenServ, employeeServ, menuServ, orderServ, promotoinServ, srs)
 	fiber.Start()
 }

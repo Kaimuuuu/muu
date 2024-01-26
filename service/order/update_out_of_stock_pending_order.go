@@ -1,8 +1,8 @@
 package order
 
-func (os *OrderService) UpdateOutOfStockPendingOrder(menuItemId string, isOutOfStock bool) error {
+func (os *OrderService) UpdateOutOfStockPendingOrders(menuItemId string, isOutOfStock bool) error {
 	// Time Complexity: O(o_p * c) ; o_p is size of pending order, c is size of menu
-	orders, err := os.GetPendingOrder()
+	orders, err := os.orderRepo.GetPendingOrders()
 	if err != nil {
 		return err
 	}

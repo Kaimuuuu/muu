@@ -76,11 +76,11 @@ func (or *OrderRepository) GetById(id string) (*model.Order, error) {
 	return &o, nil
 }
 
-func (or *OrderRepository) GetPendingOrder() ([]model.Order, error) {
+func (or *OrderRepository) GetPendingOrders() ([]model.Order, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	cur, err := or.col.Find(ctx, bson.D{{"status", model.Pending}})
+	cur, err := or.col.Find(ctx, bson.D{{"status", model.OrderPendingStatus}})
 	if err != nil {
 		return []model.Order{}, err
 	}
@@ -93,7 +93,7 @@ func (or *OrderRepository) GetPendingOrder() ([]model.Order, error) {
 	return orders, nil
 }
 
-func (or *OrderRepository) GetOrderByToken(token string) ([]model.Order, error) {
+func (or *OrderRepository) GetByToken(token string) ([]model.Order, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 

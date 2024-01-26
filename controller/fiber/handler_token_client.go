@@ -11,14 +11,14 @@ import (
 func (f *FiberServer) NewClientTokenHandler() func(*fiber.Ctx) error {
 	return keyauth.New(keyauth.Config{
 		Validator: func(c *fiber.Ctx, token string) (bool, error) {
-			cli, err := f.tokenStorage.Get(token)
+			cli, err := f.tokenServ.Get(token)
 
 			if err != nil {
 				return false, keyauth.ErrMissingOrMalformedAPIKey
 			}
 
 			if time.Now().Compare(cli.Expire) >= 0 {
-				if err := f.tokenStorage.Remove(token); err != nil {
+				if err := f.tokenServ.Delete(token); err != nil {
 					return false, fmt.Errorf("cannot remove token")
 				}
 				return false, fmt.Errorf("token expired")

@@ -27,7 +27,7 @@ type EmployeeRepository interface {
 	Update(id string, empl *model.Employee) error
 	Delete(id string) error
 	GetById(id string) (*model.Employee, error)
-	GetAll() ([]model.Employee, error)
+	All() ([]model.Employee, error)
 	GetByEmail(email string) (*model.Employee, error)
 }
 
@@ -45,4 +45,9 @@ type UpdateEmployeeRequest struct {
 	Role      int8   `validate:"min=0" json:"role"`
 	ImagePath string `validate:"" json:"imagePath"`
 	Email     string `validate:"required,email" json:"email"`
+}
+
+type SignInRequest struct {
+	Email    string `validate:"required" json:"email"`
+	Password string `validate:"required" json:"password"`
 }

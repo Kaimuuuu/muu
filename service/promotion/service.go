@@ -11,24 +11,24 @@ var (
 	ClientInUsedError = errors.New("there is some client used this promotion")
 )
 
-func NewPromotionService(promotionRepo PromotionRepository, menuRepo MenuRepository, tokenStorage TokenStorage) *PromotionService {
+func NewPromotionService(promotionRepo PromotionRepository, menuRepo MenuRepository, tokenRepo TokenRepository) *PromotionService {
 	return &PromotionService{
 		promotionRepo: promotionRepo,
 		menuRepo:      menuRepo,
-		tokenStorage:  tokenStorage,
+		tokenRepo:     tokenRepo,
 	}
 }
 
 type PromotionService struct {
 	promotionRepo PromotionRepository
 	menuRepo      MenuRepository
-	tokenStorage  TokenStorage
+	tokenRepo     TokenRepository
 }
 
 type PromotionRepository interface {
 	Insert(p *model.Promotion) error
 	GetById(id string) (*model.Promotion, error)
-	GetAll() ([]model.Promotion, error)
+	All() ([]model.Promotion, error)
 	Update(id string, p *model.Promotion) error
 	Delete(id string) error
 }
@@ -37,13 +37,15 @@ type MenuRepository interface {
 	GetById(id string) (*model.MenuItem, error)
 }
 
-type TokenStorage interface {
-	GetAll() ([]model.Client, error)
+type TokenRepository interface {
+	Get(token string) (*model.Client, error)
+	All() ([]model.Client, error)
+	Delete(token string) error
+	Insert(c *model.Client) error
 }
 
 type CreatePromotionRequest struct {
 	Name               string                    `validate:"required" json:"name"`
-	Weight             int                       `validate:"required,number" json:"weight"`
 	Price              float32                   `validate:"min=0,number" json:"price"`
 	ImagePath          string                    `validate:"" json:"imagePath"`
 	Duration           time.Duration             `validate:"required" json:"duration"`
@@ -53,16 +55,11 @@ type CreatePromotionRequest struct {
 
 type UpdatePromotionRequest struct {
 	Name               string                    `validate:"required" json:"name"`
-	Weight             int                       `validate:"required,number" json:"weight"`
 	Price              float32                   `validate:"min=0,number" json:"price"`
 	ImagePath          string                    `validate:"" json:"imagePath"`
 	Duration           time.Duration             `validate:"required" json:"duration"`
 	Description        string                    `validate:"" json:"description"`
 	PromotionMenuItems []model.PromotionMenuItem `validate:"required,dive,required" json:"promotionMenuItems" form:"promotionMenuItems[]"`
-}
-
-type UpdateWeightRequest struct {
-	Weight int `validate:"required,number" json:"weight"`
 }
 
 type PromotionMenuItemResponse struct {

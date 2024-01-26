@@ -1,25 +1,12 @@
 package fiber
 
 import (
-	"kaimuu/model"
 	"kaimuu/service/promotion"
 
 	"github.com/gofiber/fiber/v2"
 )
 
 func (f *FiberServer) AddPromotionRoutes(clientTokenHandler func(*fiber.Ctx) error, employeeTokenHandler func(*fiber.Ctx) error) {
-
-	f.app.Get("/promotion/weight", clientTokenHandler, func(c *fiber.Ctx) error {
-		cli := c.Locals("client").(*model.Client)
-
-		w, err := f.promotionServ.GetWeight(cli.PromotionId)
-		if err != nil {
-			return f.errorHandler(c, err)
-		}
-
-		return c.Status(fiber.StatusOK).JSON(fiber.Map{"weight": w})
-	})
-
 	routes := f.app.Group("/promotion", employeeTokenHandler, toJwtPayloadHandler)
 
 	routes.Post("/", chefRoleFilterer, waiterRoleFilterer, func(c *fiber.Ctx) error {
@@ -34,7 +21,7 @@ func (f *FiberServer) AddPromotionRoutes(clientTokenHandler func(*fiber.Ctx) err
 			return f.errorHandler(c, err)
 		}
 
-		if err := f.promotionServ.CreatePromotion(req, payload.EmployeeId); err != nil {
+		if err := f.promotionServ.Create(req, payload.EmployeeId); err != nil {
 			return f.errorHandler(c, err)
 		}
 
@@ -51,7 +38,7 @@ func (f *FiberServer) AddPromotionRoutes(clientTokenHandler func(*fiber.Ctx) err
 	})
 
 	routes.Get("/", func(c *fiber.Ctx) error {
-		promotions, err := f.promotionServ.GetPromotions()
+		promotions, err := f.promotionServ.All()
 		if err != nil {
 			return f.errorHandler(c, err)
 		}
@@ -62,7 +49,7 @@ func (f *FiberServer) AddPromotionRoutes(clientTokenHandler func(*fiber.Ctx) err
 	routes.Get("/:promotionId/menu", func(c *fiber.Ctx) error {
 		promotionId := c.Params("promotionId")
 
-		promotionMenuItems, err := f.promotionServ.GetPromotionMenu(promotionId)
+		promotionMenuItems, err := f.promotionServ.GetMenu(promotionId)
 		if err != nil {
 			return f.errorHandler(c, err)
 		}
@@ -82,7 +69,7 @@ func (f *FiberServer) AddPromotionRoutes(clientTokenHandler func(*fiber.Ctx) err
 			return f.errorHandler(c, err)
 		}
 
-		if err := f.promotionServ.UpdatePromotion(promotionId, req); err != nil {
+		if err := f.promotionServ.Update(promotionId, req); err != nil {
 			return f.errorHandler(c, err)
 		}
 

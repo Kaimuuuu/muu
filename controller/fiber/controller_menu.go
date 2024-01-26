@@ -11,7 +11,7 @@ func (f *FiberServer) AddMenuRoutes(clientTokenHandler func(*fiber.Ctx) error, e
 	f.app.Get("/menu", clientTokenHandler, func(c *fiber.Ctx) error {
 		cli := c.Locals("client").(*model.Client)
 
-		m, err := f.menuServ.GetMenu(cli)
+		m, err := f.menuServ.Get(cli)
 		if err != nil {
 			return f.errorHandler(c, err)
 		}
@@ -22,7 +22,7 @@ func (f *FiberServer) AddMenuRoutes(clientTokenHandler func(*fiber.Ctx) error, e
 	f.app.Get("/menu/recommand", clientTokenHandler, func(c *fiber.Ctx) error {
 		cli := c.Locals("client").(*model.Client)
 
-		m, err := f.srs.GetRecommand(cli.PromotionId)
+		m, err := f.srs.Get(cli.PromotionId)
 		if err != nil {
 			return f.errorHandler(c, err)
 		}
@@ -33,7 +33,7 @@ func (f *FiberServer) AddMenuRoutes(clientTokenHandler func(*fiber.Ctx) error, e
 	routes := f.app.Group("/menu", employeeTokenHandler, toJwtPayloadHandler)
 
 	routes.Get("/edit", func(c *fiber.Ctx) error {
-		m, err := f.menuServ.GetAllMenu()
+		m, err := f.menuServ.All()
 		if err != nil {
 			return f.errorHandler(c, err)
 		}
@@ -53,7 +53,7 @@ func (f *FiberServer) AddMenuRoutes(clientTokenHandler func(*fiber.Ctx) error, e
 			return f.errorHandler(c, err)
 		}
 
-		if err := f.menuServ.CreateMenu(req, payload.EmployeeId); err != nil {
+		if err := f.menuServ.Create(req, payload.EmployeeId); err != nil {
 			return f.errorHandler(c, err)
 		}
 
@@ -82,7 +82,7 @@ func (f *FiberServer) AddMenuRoutes(clientTokenHandler func(*fiber.Ctx) error, e
 			return f.errorHandler(c, err)
 		}
 
-		if err := f.menuServ.UpdateMenu(menuId, req); err != nil {
+		if err := f.menuServ.Update(menuId, req); err != nil {
 			return f.errorHandler(c, err)
 		}
 
@@ -101,7 +101,7 @@ func (f *FiberServer) AddMenuRoutes(clientTokenHandler func(*fiber.Ctx) error, e
 			return f.errorHandler(c, err)
 		}
 
-		if err := f.menuServ.SetOutOfStock(menuId, req.IsOutOfStock); err != nil {
+		if err := f.menuServ.UpdateOutOfStock(menuId, req.IsOutOfStock); err != nil {
 			return f.errorHandler(c, err)
 		}
 

@@ -21,7 +21,7 @@ func (f *FiberServer) AddEmployeeRoutes(employeeTokenHandler func(*fiber.Ctx) er
 			return f.errorHandler(c, err)
 		}
 
-		genPass, err := f.employeeServ.CreateEmployee(req, payload.EmployeeId)
+		genPass, err := f.employeeServ.Create(req, payload.EmployeeId)
 		if err != nil {
 			return f.errorHandler(c, err)
 		}
@@ -40,7 +40,7 @@ func (f *FiberServer) AddEmployeeRoutes(employeeTokenHandler func(*fiber.Ctx) er
 	})
 
 	routes.Get("/", func(c *fiber.Ctx) error {
-		employees, err := f.employeeServ.GetEmployees()
+		employees, err := f.employeeServ.All()
 		if err != nil {
 			return f.errorHandler(c, err)
 		}
@@ -60,7 +60,7 @@ func (f *FiberServer) AddEmployeeRoutes(employeeTokenHandler func(*fiber.Ctx) er
 			return f.errorHandler(c, err)
 		}
 
-		if err := f.employeeServ.UpdateEmployee(employeeId, req); err != nil {
+		if err := f.employeeServ.Update(employeeId, req); err != nil {
 			return f.errorHandler(c, err)
 		}
 

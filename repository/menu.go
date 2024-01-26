@@ -75,7 +75,7 @@ func (mr *MenuRepository) GetById(id string) (*model.MenuItem, error) {
 	return &m, nil
 }
 
-func (mr *MenuRepository) GetAll() ([]model.MenuItem, error) {
+func (mr *MenuRepository) All() ([]model.MenuItem, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 

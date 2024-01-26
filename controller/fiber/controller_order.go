@@ -8,6 +8,16 @@ import (
 )
 
 func (f *FiberServer) AddOrderRoutes(clientTokenHandler func(*fiber.Ctx) error, employeeTokenHandler func(*fiber.Ctx) error) {
+	f.app.Get("/order/client", clientTokenHandler, func(c *fiber.Ctx) error {
+		cli := c.Locals("client").(*model.Client)
+
+		orders, err := f.orderServ.GetOrderByToken(cli.Token)
+		if err != nil {
+			return f.errorHandler(c, err)
+		}
+
+		return c.Status(fiber.StatusOK).JSON(orders)
+	})
 
 	f.app.Post("/order", clientTokenHandler, func(c *fiber.Ctx) error {
 		cli := c.Locals("client").(*model.Client)
@@ -21,7 +31,7 @@ func (f *FiberServer) AddOrderRoutes(clientTokenHandler func(*fiber.Ctx) error, 
 			return f.errorHandler(c, err)
 		}
 
-		if err := f.orderServ.CreateOrder(req, cli); err != nil {
+		if err := f.orderServ.Create(req, cli); err != nil {
 			return f.errorHandler(c, err)
 		}
 
@@ -45,7 +55,7 @@ func (f *FiberServer) AddOrderRoutes(clientTokenHandler func(*fiber.Ctx) error, 
 	})
 
 	routes.Get("/pending", func(c *fiber.Ctx) error {
-		orders, err := f.orderServ.GetPendingOrder()
+		orders, err := f.orderServ.GetPendingOrders()
 		if err != nil {
 			return f.errorHandler(c, err)
 		}
@@ -66,6 +76,25 @@ func (f *FiberServer) AddOrderRoutes(clientTokenHandler func(*fiber.Ctx) error, 
 		}
 
 		if err := f.orderServ.UpdateOrderStatus(req, orderId); err != nil {
+			return f.errorHandler(c, err)
+		}
+
+		return c.SendStatus(fiber.StatusOK)
+	})
+
+	routes.Put("/status/:orderId/items", waiterRoleFilterer, func(c *fiber.Ctx) error {
+		orderId := c.Params("orderId")
+
+		req := order.UpdateOrderItemsStatusRequest{}
+		if err := c.BodyParser(&req); err != nil {
+			return f.errorHandler(c, err)
+		}
+
+		if err := f.Validate(req); err != nil {
+			return f.errorHandler(c, err)
+		}
+
+		if err := f.orderServ.UpdateOrderItemStatus(req, orderId); err != nil {
 			return f.errorHandler(c, err)
 		}
 
