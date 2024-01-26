@@ -16,7 +16,7 @@ type PromotionRepository struct {
 
 func NewPromotionRepository(db *mongo.Database) *PromotionRepository {
 	return &PromotionRepository{
-		col: db.Collection("ptions"),
+		col: db.Collection("promotions"),
 	}
 }
 
