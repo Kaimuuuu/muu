@@ -11,8 +11,10 @@ func (os *OrderService) UpdateOrderStatus(req UpdateOrderStatusRequest, orderId 
 	o.Status = req.Status
 
 	if req.Status == model.OrderSuccessStatus {
-		for i, _ := range o.OrderItems {
-			o.OrderItems[i].IsComplete = true
+		for i, oi := range o.OrderItems {
+			if !oi.OutOfStock {
+				o.OrderItems[i].IsComplete = true
+			}
 		}
 	}
 

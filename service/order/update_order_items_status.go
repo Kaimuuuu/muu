@@ -18,7 +18,7 @@ func (os *OrderService) UpdateOrderItemStatus(req UpdateOrderItemsStatusRequest,
 
 	errBit := 0
 	for _, oi := range o.OrderItems {
-		if !oi.IsComplete {
+		if (!oi.IsComplete && !oi.OutOfStock) || (oi.IsComplete && oi.OutOfStock) {
 			errBit = 1
 		}
 	}
