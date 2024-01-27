@@ -48,7 +48,7 @@ func (ts *TransactionService) toTransaction(c *model.Client) (*model.Transaction
 	orderItems := make([]model.OrderItem, 0)
 	for _, o := range orders {
 		for _, oi := range o.OrderItems {
-			if !oi.OutOfStock && oi.IsComplete {
+			if oi.IsComplete || (o.Status == model.OrderPendingStatus && !oi.IsComplete) {
 				orderItems = append(orderItems, oi)
 			}
 		}
