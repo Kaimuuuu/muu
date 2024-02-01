@@ -1,5 +1,7 @@
 package promotion
 
+import "kaimuu/model"
+
 func (ps *PromotionService) GetMenu(promotionId string) ([]PromotionMenuItemResponse, error) {
 	p, err := ps.promotionRepo.GetById(promotionId)
 	if err != nil {
@@ -11,6 +13,10 @@ func (ps *PromotionService) GetMenu(promotionId string) ([]PromotionMenuItemResp
 		m, err := ps.menuRepo.GetById(pmi.MenuItemId)
 		if err != nil {
 			return []PromotionMenuItemResponse{}, err
+		}
+
+		if pmi.Type == model.PromotionBuffet {
+			m.Price = 0
 		}
 
 		promotionMenuItems[i].Type = pmi.Type
