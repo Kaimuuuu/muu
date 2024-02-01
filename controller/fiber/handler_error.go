@@ -4,6 +4,7 @@ import (
 	"kaimuu/service/employee"
 	"kaimuu/service/order"
 	"kaimuu/service/promotion"
+	"kaimuu/service/token"
 
 	"github.com/cockroachdb/errors"
 	"github.com/gofiber/fiber/v2"
@@ -26,6 +27,7 @@ var errorList = map[error]ErrorInfo{
 	order.MenuItemOutOfStockError:   {400, "มีเมนูที่สถาณะเป็น \"หมด\""},
 	order.WeightExceededError:       {400, "น้ำหนักต่อคำสั่งอาหารเกินกำหมด"},
 	promotion.ClientInUsedError:     {400, "ไม่สามารถแก้ไขได้เนื่องจากมีลูกค้าใช้งานโปรโมชั่นนี้อยู่"},
+	token.TableInUsedError:          {400, "โต๊ะนี้ถูกใช้งานแล้ว"},
 }
 
 func (f *FiberServer) sendError(c *fiber.Ctx, errInfo ErrorInfo) error {

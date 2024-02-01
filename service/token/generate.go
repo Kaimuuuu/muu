@@ -6,6 +6,17 @@ import (
 )
 
 func (ts *TokenService) Generate(req GenerateTokenRequest, employeeId string) (string, error) {
+	clients, err := ts.tokenRepo.All()
+	if err != nil {
+		return "", err
+	}
+
+	for _, c := range clients {
+		if c.TableNumber == req.TableNumber {
+			return "", TableInUsedError
+		}
+	}
+
 	token := GenerateToken()
 
 	p, err := ts.promotionRepo.GetById(req.PromotionId)

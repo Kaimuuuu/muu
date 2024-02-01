@@ -3,8 +3,11 @@ package token
 import (
 	"kaimuu/model"
 
+	"github.com/cockroachdb/errors"
 	"github.com/google/uuid"
 )
+
+var TableInUsedError = errors.New("table in used")
 
 func NewTokenService(tokenRepo TokenRepository, promotionRepo PromotionRepository) *TokenService {
 	return &TokenService{
