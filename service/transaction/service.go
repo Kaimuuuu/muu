@@ -1,6 +1,7 @@
 package transaction
 
 import (
+	"fmt"
 	"kaimuu/model"
 	"time"
 )
@@ -71,23 +72,26 @@ func (ts *TransactionService) toTransaction(c *model.Client) (*model.Transaction
 		orderItems = append(orderItems, oi)
 	}
 
-	var sum float32 = 0
+	var startingPrice float32 = 0
+	var orderPrice float32 = 0
 
 	p, err := ts.promotionRepo.GetById(c.PromotionId)
 	if err != nil {
 		return &model.Transaction{}, err
 	}
 
-	sum += p.Price * float32(c.Size)
+	startingPrice += p.Price * float32(c.Size)
 	for _, oi := range orderItems {
-		sum += oi.Price * float32(oi.Quantity)
+		orderPrice += oi.Price * float32(oi.Quantity)
 	}
 
 	return &model.Transaction{
 		TableNumber:       c.TableNumber,
 		Size:              c.Size,
-		PromotionName:     p.Name,
-		TotalPrice:        sum,
+		PromotionName:     fmt.Sprintf("%s (%.2f บาท)", p.Name, p.Price),
+		StartPrice:        startingPrice,
+		OrderPrice:        orderPrice,
+		TotalPrice:        startingPrice + orderPrice,
 		RemainingDuration: time.Until(c.Expire),
 		CreatedAt:         c.CreatedAt,
 		OrderItems:        orderItems,
