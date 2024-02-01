@@ -15,6 +15,7 @@ func (ps *PromotionService) GetMenu(promotionId string) ([]PromotionMenuItemResp
 
 		promotionMenuItems[i].Type = pmi.Type
 		promotionMenuItems[i].MenuItem = *m
+		promotionMenuItems[i].Limit = pmi.Limit
 	}
 
 	return promotionMenuItems, nil

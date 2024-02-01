@@ -10,6 +10,7 @@ var (
 	OrderInvalidMenuItemError = errors.New("ordering invalid menu item id")
 	MenuItemOutOfStockError   = errors.New("menu item out of stock")
 	WeightExceededError       = errors.New("total weight exceeded")
+	InvalidOrderQuantity      = errors.New("order request exceed promotion limit")
 )
 
 func NewOrderService(orderRepo OrderRepository, menuRepo MenuRepository, promotionRepo PromotionRepository, tokenRepo TokenRepository) *OrderService {

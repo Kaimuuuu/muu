@@ -24,5 +24,5 @@ type Promotion struct {
 type PromotionMenuItem struct {
 	Type       PromotionMenuItemType `bson:"type" json:"type"`
 	MenuItemId string                `bson:"menuItemId" json:"menuItemId"`
-	Limit      int                   `bson:"limit" json:"limit"`
+	Limit      int8                  `bson:"limit" json:"limit"`
 }

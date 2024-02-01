@@ -41,7 +41,7 @@ func main() {
 	employeeServ := employee.NewEmployeeService(employeeRepo)
 	promotoinServ := promotion.NewPromotionService(promotionRepo, menuRepo, tokenRepo)
 	orderServ := order.NewOrderService(orderRepo, menuRepo, promotionRepo, tokenRepo)
-	menuServ := menu.NewMenuService(menuRepo, orderServ, promotionRepo)
+	menuServ := menu.NewMenuService(menuRepo, orderServ, promotionRepo, promotoinServ)
 	tokenServ := token.NewTokenService(tokenRepo, promotionRepo)
 	transactionServ := transaction.NewTransactionService(transactionRepo, orderRepo, promotionRepo, tokenRepo)
 

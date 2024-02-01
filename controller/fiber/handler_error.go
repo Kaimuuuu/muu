@@ -30,6 +30,7 @@ var errorList = map[error]ErrorInfo{
 	token.TableInUsedError:          {400, "โต๊ะนี้ถูกใช้งานแล้ว"},
 	TokenExpiredError:               {500, "token นี้หมดอายุการใช้งานแล้ว"},
 	InvalidToken:                    {500, "token ไม่ถูกต้อง"},
+	order.InvalidOrderQuantity:      {400, "สั่งอาหารเกินปริมานที่กำหนด"},
 }
 
 func (f *FiberServer) sendError(c *fiber.Ctx, errInfo ErrorInfo) error {

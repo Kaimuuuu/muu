@@ -65,4 +65,5 @@ type UpdatePromotionRequest struct {
 type PromotionMenuItemResponse struct {
 	Type     model.PromotionMenuItemType `json:"type"`
 	MenuItem model.MenuItem              `json:"menuItem"`
+	Limit    int8                        `json:"limit"`
 }

@@ -23,6 +23,10 @@ func (os *OrderService) Create(req CreateOrderRequest, c *model.Client) error {
 		// validate menuItemId
 		errBit := 1
 		for _, promotionMenuItem := range p.PromotionMenuItems {
+			if roi.Quantity > promotionMenuItem.Limit {
+				return InvalidOrderQuantity
+			}
+
 			if promotionMenuItem.MenuItemId == roi.MenuItemId {
 				errBit = 0
 				break
