@@ -18,9 +18,6 @@ func (f *FiberServer) NewClientTokenHandler() func(*fiber.Ctx) error {
 			}
 
 			if time.Now().Compare(cli.Expire) >= 0 {
-				if err := f.tokenServ.Delete(token); err != nil {
-					return false, fmt.Errorf("cannot remove token")
-				}
 				return false, fmt.Errorf("token expired")
 			}
 
