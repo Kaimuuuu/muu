@@ -3,11 +3,15 @@ package fiber
 import (
 	"kaimuu/model"
 	"kaimuu/service/order"
+	"kaimuu/util/pubsub"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 )
 
 func (f *FiberServer) AddOrderRoutes(clientTokenHandler func(*fiber.Ctx) error, employeeTokenHandler func(*fiber.Ctx) error) {
+	ps := pubsub.New()
+
 	f.app.Get("/order/client", clientTokenHandler, func(c *fiber.Ctx) error {
 		cli := c.Locals("client").(*model.Client)
 
@@ -39,6 +43,8 @@ func (f *FiberServer) AddOrderRoutes(clientTokenHandler func(*fiber.Ctx) error, 
 			f.srs.Increment(roi.MenuItemId, roi.Quantity)
 		}
 
+		ps.Publish()
+
 		return c.SendStatus(fiber.StatusCreated)
 	})
 
@@ -61,6 +67,31 @@ func (f *FiberServer) AddOrderRoutes(clientTokenHandler func(*fiber.Ctx) error, 
 		}
 
 		return c.Status(fiber.StatusOK).JSON(orders)
+	})
+
+	routes.Get("/pending/long-polling", func(c *fiber.Ctx) error {
+		ch, closeCh := ps.Subscribe()
+		defer closeCh()
+
+		to := make(chan struct{}, 1)
+
+		go func() {
+			time.Sleep(time.Hour * 2)
+			to <- struct{}{}
+			close(to)
+		}()
+
+		select {
+		case <-ch:
+			orders, err := f.orderServ.GetPendingOrders()
+			if err != nil {
+				return f.errorHandler(c, err)
+			}
+
+			return c.Status(fiber.StatusOK).JSON(orders)
+		case <-to:
+			return c.SendStatus(fiber.StatusRequestTimeout)
+		}
 	})
 
 	routes.Put("/status/:orderId", waiterRoleFilterer, func(c *fiber.Ctx) error {

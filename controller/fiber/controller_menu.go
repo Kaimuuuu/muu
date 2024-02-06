@@ -3,11 +3,15 @@ package fiber
 import (
 	"kaimuu/model"
 	"kaimuu/service/menu"
+	"kaimuu/util/pubsub"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 )
 
 func (f *FiberServer) AddMenuRoutes(clientTokenHandler func(*fiber.Ctx) error, employeeTokenHandler func(*fiber.Ctx) error) {
+	ps := pubsub.New()
+
 	f.app.Get("/menu", clientTokenHandler, func(c *fiber.Ctx) error {
 		cli := c.Locals("client").(*model.Client)
 
@@ -17,6 +21,32 @@ func (f *FiberServer) AddMenuRoutes(clientTokenHandler func(*fiber.Ctx) error, e
 		}
 
 		return c.Status(fiber.StatusOK).JSON(m)
+	})
+
+	f.app.Get("/menu/long-polling", clientTokenHandler, func(c *fiber.Ctx) error {
+		cli := c.Locals("client").(*model.Client)
+
+		ch, closeCh := ps.Subscribe()
+		defer closeCh()
+
+		to := make(chan struct{}, 1)
+
+		go func() {
+			time.Sleep(time.Hour * 2)
+			to <- struct{}{}
+			close(to)
+		}()
+
+		select {
+		case <-ch:
+			m, err := f.menuServ.Get(cli)
+			if err != nil {
+				return f.errorHandler(c, err)
+			}
+			return c.Status(fiber.StatusOK).JSON(m)
+		case <-to:
+			return c.SendStatus(fiber.StatusRequestTimeout)
+		}
 	})
 
 	f.app.Get("/menu/recommand", clientTokenHandler, func(c *fiber.Ctx) error {
@@ -104,6 +134,8 @@ func (f *FiberServer) AddMenuRoutes(clientTokenHandler func(*fiber.Ctx) error, e
 		if err := f.menuServ.UpdateOutOfStock(menuId, req.IsOutOfStock); err != nil {
 			return f.errorHandler(c, err)
 		}
+
+		ps.Publish()
 
 		return c.SendStatus(fiber.StatusOK)
 	})
