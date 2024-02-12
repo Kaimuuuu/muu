@@ -5,6 +5,16 @@ import "github.com/gofiber/fiber/v2"
 func (f *FiberServer) AddTransactionRoutes(clientTokenHandler func(*fiber.Ctx) error, employeeTokenHandler func(*fiber.Ctx) error) {
 	routes := f.app.Group("/transaction", employeeTokenHandler, toJwtPayloadHandler)
 
+	routes.Get("/", chefRoleFilterer, waiterRoleFilterer, func(c *fiber.Ctx) error {
+
+		transactions, err := f.transactionServ.All()
+		if err != nil {
+			return f.errorHandler(c, err)
+		}
+
+		return c.Status(fiber.StatusOK).JSON(transactions)
+	})
+
 	routes.Post("/checkout/:token", chefRoleFilterer, func(c *fiber.Ctx) error {
 		token := c.Params("token")
 

@@ -38,6 +38,7 @@ type TokenRepository interface {
 
 type TransactionRepository interface {
 	Insert(t *model.Transaction) error
+	All() ([]model.Transaction, error)
 }
 
 func (ts *TransactionService) toTransaction(c *model.Client) (*model.Transaction, error) {
@@ -87,6 +88,7 @@ func (ts *TransactionService) toTransaction(c *model.Client) (*model.Transaction
 
 	return &model.Transaction{
 		TableNumber:       c.TableNumber,
+		Token:             c.Token,
 		Size:              c.Size,
 		PromotionName:     fmt.Sprintf("%s (%.2f บาท)", p.Name, p.Price),
 		StartPrice:        startingPrice,
