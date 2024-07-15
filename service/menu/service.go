@@ -1,8 +1,8 @@
 package menu
 
 import (
-	"kaimuu/model"
-	"kaimuu/service/promotion"
+	"github.com/Kaimuuuu/muu/model"
+	"github.com/Kaimuuuu/muu/service/promotion"
 )
 
 func NewMenuService(menuRepo MenuRepository, orderServ OrderService, promotionRepo PromotionRepository, promotionServ PromotionService) *MenuService {

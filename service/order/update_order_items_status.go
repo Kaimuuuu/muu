@@ -1,6 +1,6 @@
 package order
 
-import "kaimuu/model"
+import "github.com/Kaimuuuu/muu/model"
 
 func (os *OrderService) UpdateOrderItemStatus(req UpdateOrderItemsStatusRequest, orderId string) error {
 	o, err := os.orderRepo.GetById(orderId)

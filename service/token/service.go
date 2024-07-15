@@ -1,7 +1,7 @@
 package token
 
 import (
-	"kaimuu/model"
+	"github.com/Kaimuuuu/muu/model"
 
 	"github.com/cockroachdb/errors"
 	"github.com/google/uuid"

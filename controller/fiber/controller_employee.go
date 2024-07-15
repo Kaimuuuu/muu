@@ -1,7 +1,7 @@
 package fiber
 
 import (
-	"kaimuu/service/employee"
+	"github.com/Kaimuuuu/muu/service/employee"
 
 	"github.com/gofiber/fiber/v2"
 )

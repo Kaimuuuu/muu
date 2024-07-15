@@ -2,7 +2,7 @@ package fiber
 
 import (
 	"fmt"
-	"kaimuu/service/token"
+	"github.com/Kaimuuuu/muu/service/token"
 	"os"
 
 	"github.com/gofiber/fiber/v2"

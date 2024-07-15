@@ -7,7 +7,7 @@
 FRONTEND_URL=${frontend_url} MONGO_URL=${mongodb_url} MONGO_DB=${mongodb_db} PORT=${port} JWT_SECRET=${jwt_secret} go run main.go
 
 # example
-FRONTEND_URL=localhost:3000 MONGO_URL=mongodb://localhost:27017 MONGO_DB=kaimuu PORT=3001 JWT_SECRET=secret go run main.go
+FRONTEND_URL=localhost:3000 MONGO_URL=mongodb://localhost:27017 MONGO_DB=github.com/Kaimuuuu/muu PORT=3001 JWT_SECRET=secret go run main.go
 ```
 
 when the application is running use https://jwt.io/ to generate a useable JWT to create initial admin user

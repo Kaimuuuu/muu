@@ -1,6 +1,6 @@
 package employee
 
-import "kaimuu/model"
+import "github.com/Kaimuuuu/muu/model"
 
 func (es *EmployeeService) All() ([]model.Employee, error) {
 	employees, err := es.employeeRepo.All()

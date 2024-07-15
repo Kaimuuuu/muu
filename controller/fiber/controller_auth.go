@@ -1,8 +1,8 @@
 package fiber
 
 import (
-	"kaimuu/model"
-	"kaimuu/service/employee"
+	"github.com/Kaimuuuu/muu/model"
+	"github.com/Kaimuuuu/muu/service/employee"
 	"time"
 
 	"github.com/gofiber/fiber/v2"

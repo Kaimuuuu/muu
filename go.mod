@@ -1,4 +1,4 @@
-module kaimuu
+module github.com/Kaimuuuu/muu
 
 go 1.21.4
 

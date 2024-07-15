@@ -1,10 +1,10 @@
 package fiber
 
 import (
-	"kaimuu/service/employee"
-	"kaimuu/service/order"
-	"kaimuu/service/promotion"
-	"kaimuu/service/token"
+	"github.com/Kaimuuuu/muu/service/employee"
+	"github.com/Kaimuuuu/muu/service/order"
+	"github.com/Kaimuuuu/muu/service/promotion"
+	"github.com/Kaimuuuu/muu/service/token"
 
 	"github.com/cockroachdb/errors"
 	"github.com/gofiber/fiber/v2"

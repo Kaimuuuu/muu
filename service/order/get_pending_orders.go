@@ -1,6 +1,6 @@
 package order
 
-import "kaimuu/model"
+import "github.com/Kaimuuuu/muu/model"
 
 func (os *OrderService) GetPendingOrders() ([]model.Order, error) {
 	orders, err := os.orderRepo.GetPendingOrders()

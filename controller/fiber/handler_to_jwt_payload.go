@@ -1,7 +1,7 @@
 package fiber
 
 import (
-	"kaimuu/model"
+	"github.com/Kaimuuuu/muu/model"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v5"

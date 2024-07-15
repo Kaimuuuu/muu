@@ -1,9 +1,9 @@
 package fiber
 
 import (
-	"kaimuu/model"
-	"kaimuu/service/order"
-	"kaimuu/util/pubsub"
+	"github.com/Kaimuuuu/muu/model"
+	"github.com/Kaimuuuu/muu/service/order"
+	"github.com/Kaimuuuu/muu/util/pubsub"
 	"time"
 
 	"github.com/gofiber/fiber/v2"

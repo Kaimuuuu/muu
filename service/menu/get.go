@@ -1,8 +1,8 @@
 package menu
 
 import (
-	"kaimuu/model"
-	"kaimuu/service/promotion"
+	"github.com/Kaimuuuu/muu/model"
+	"github.com/Kaimuuuu/muu/service/promotion"
 )
 
 func (ms *MenuService) Get(cli *model.Client) ([]promotion.PromotionMenuItemResponse, error) {

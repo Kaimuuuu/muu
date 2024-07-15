@@ -2,7 +2,7 @@ package employee
 
 import (
 	"fmt"
-	"kaimuu/model"
+	"github.com/Kaimuuuu/muu/model"
 	"os"
 )
 

@@ -1,6 +1,6 @@
 package promotion
 
-import "kaimuu/model"
+import "github.com/Kaimuuuu/muu/model"
 
 func (ps *PromotionService) All() ([]model.Promotion, error) {
 	promotions, err := ps.promotionRepo.All()

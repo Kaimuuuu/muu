@@ -1,6 +1,6 @@
 package transaction
 
-import "kaimuu/model"
+import "github.com/Kaimuuuu/muu/model"
 
 func (ts *TransactionService) Summary(token string) (*model.Transaction, error) {
 	c, err := ts.tokenRepo.Get(token)

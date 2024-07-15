@@ -1,6 +1,6 @@
 package token
 
-import "kaimuu/model"
+import "github.com/Kaimuuuu/muu/model"
 
 func (ts *TokenService) All() ([]model.Client, error) {
 	clients, err := ts.tokenRepo.All()

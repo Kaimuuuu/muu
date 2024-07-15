@@ -1,7 +1,7 @@
 package simplerecommandationsystem
 
 import (
-	"kaimuu/model"
+	"github.com/Kaimuuuu/muu/model"
 	"sort"
 )
 

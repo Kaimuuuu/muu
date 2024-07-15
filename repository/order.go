@@ -2,7 +2,7 @@ package repository
 
 import (
 	"context"
-	"kaimuu/model"
+	"github.com/Kaimuuuu/muu/model"
 	"time"
 
 	"github.com/pkg/errors"

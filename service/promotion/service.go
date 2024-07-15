@@ -1,7 +1,7 @@
 package promotion
 
 import (
-	"kaimuu/model"
+	"github.com/Kaimuuuu/muu/model"
 	"time"
 
 	"github.com/cockroachdb/errors"

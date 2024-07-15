@@ -1,6 +1,6 @@
 package transaction
 
-import "kaimuu/model"
+import "github.com/Kaimuuuu/muu/model"
 
 func (ts *TransactionService) All() ([]model.Transaction, error) {
 	transactions, err := ts.transactionRepo.All()

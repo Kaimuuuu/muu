@@ -1,6 +1,6 @@
 package promotion
 
-import "kaimuu/model"
+import "github.com/Kaimuuuu/muu/model"
 
 func (ps *PromotionService) GetMenu(promotionId string) ([]PromotionMenuItemResponse, error) {
 	p, err := ps.promotionRepo.GetById(promotionId)

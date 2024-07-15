@@ -1,7 +1,7 @@
 package employee
 
 import (
-	"kaimuu/model"
+	"github.com/Kaimuuuu/muu/model"
 
 	"golang.org/x/crypto/bcrypt"
 )

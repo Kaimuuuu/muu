@@ -2,7 +2,7 @@ package transaction
 
 import (
 	"fmt"
-	"kaimuu/model"
+	"github.com/Kaimuuuu/muu/model"
 	"time"
 )
 

@@ -1,6 +1,6 @@
 package menu
 
-import "kaimuu/model"
+import "github.com/Kaimuuuu/muu/model"
 
 func (ms *MenuService) All() ([]model.MenuItem, error) {
 	menus, err := ms.menuRepo.All()

@@ -1,6 +1,6 @@
 package simplerecommandationsystem
 
-import "kaimuu/model"
+import "github.com/Kaimuuuu/muu/model"
 
 type SimpleRecommandationSystem struct {
 	Recommands    map[string]int // key: MenuItemId, value: OrderCount

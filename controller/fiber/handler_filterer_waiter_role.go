@@ -2,7 +2,7 @@ package fiber
 
 import (
 	"fmt"
-	"kaimuu/model"
+	"github.com/Kaimuuuu/muu/model"
 
 	"github.com/gofiber/fiber/v2"
 )
